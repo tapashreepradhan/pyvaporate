@@ -1,4 +1,4 @@
-<img src="https://s3.amazonaws.com/mashton/pyvaporate_logo.svg" style="position: relative; width: 75%; left: 12.5%"/>
+<img src="https://s3.amazonaws.com/mashton/pyvaporate_logo.svg" style="position: relative; width: 50%; left: 25%"/>
 
 Python Package for simulating full-scale (DFT-MD-MC) field evaporation.
 

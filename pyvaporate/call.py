@@ -111,7 +111,7 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
     atom_lines = [l for l in emitter_lines[1:-1] if l.split()[-2] not in
                   ["0", "1", "2", "3"]]
     atom_types = [t.split("=")[-1] for t in emitter_lines[-1].split()[1:]]
-    print(atom_types)
+
     atom_coords = []
     for line in atom_lines:
         split_line = line.split()
@@ -123,9 +123,9 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
     x_coords = [float(a[2]) for a in atom_coords]
     y_coords = [float(a[3]) for a in atom_coords]
     z_coords = [float(a[4]) for a in atom_coords]
-    xlim = (min(x_coords), max(x_coords))
-    ylim = (min(y_coords), max(y_coords))
-    zlim = (min(z_coords), max(z_coords))
+    xlim = (min(x_coords)-10, max(x_coords)+10)
+    ylim = (min(y_coords)-10, max(y_coords)+10)
+    zlim = (min(z_coords)-10, max(z_coords)+10)
 
     with open("data.emitter", "w") as dat:
         dat.write("LAMMPS Emitter\n\n")
@@ -154,13 +154,13 @@ def write_lammps_input_file(structure_file):
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
         er.write("units real\n atom_style atomic\n\nread_data {}\n\n".format(structure_file))
-        er.write("boundary s s s\n\n")
         er.write("pair_style meam\n")
         er.write("pair_coeff * * /u/mashton/software/lammps/library.meam W NULL W\n\n")
         er.write("neighbor 1.0 bin\n")
         er.write("neigh_modify delay 5 every 1\n\n")
         er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
-        er.write("fix frozen inner freeze\n\n")
+        er.write("velocity inner set 0 0 0\n")
+        er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
         er.write("timestep 0.005\n")
         er.write("run 100")

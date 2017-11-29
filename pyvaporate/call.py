@@ -96,7 +96,7 @@ def find_surface_atoms():
     surface_numbers = []
     for line in surface_lines[5:]:
         split_line = line.split()
-        if split_line[1] == "10"
+        if split_line[1] == "10":
             surface_numbers.append(split_line[0])
     return surface_numbers
 

@@ -66,7 +66,7 @@ def update_emitter(node_file, results_file):
     """
     emitter_lines = open(node_file).readlines()
     results_lines = open(results_file).readlines()
-    results_lines = results_lines[results_lines.index("ASCII")+1:]
+    results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
     emitter_lines = [
         l for l in emitter_lines if l.split()[-1] not in remove_numbers

@@ -32,20 +32,24 @@ def call_tapsim(node_file, n_events):
 
     sm_lines = open("sampleMesh.cfg").readlines()
     with open("sampleMesh.cfg", "w") as sm:
+        edit = False
         for line in sm_lines:
             if "ID" in line and line.split()[-1] not in ["0", "1", "2", "3"]:
                 ID = line.split()[-1]
                 elt = ELTS[ID]
-            if "***_SET_NAME_HERE_***" in line:
-                line = line.replace("***_SET_NAME_HERE_***", elt)
-            elif "***_SET_MASS_HERE_***" in line:
-                line = line.replace("***_SET_MASS_HERE_***", MASSES[elt])
-            elif "EVAPORATION_CHARGE_STATE" in line:
-                line = line.replace("1", CHARGE_STATES[elt])
-            elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
-                line = line.replace(
-                    "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***", E_FIELDS[ID]
-                )
+                edit = True
+            if edit:
+                if "***_SET_NAME_HERE_***" in line:
+                    line = line.replace("***_SET_NAME_HERE_***", elt)
+                elif "***_SET_MASS_HERE_***" in line:
+                    line = line.replace("***_SET_MASS_HERE_***", MASSES[elt])
+                elif "EVAPORATION_CHARGE_STATE" in line:
+                    line = line.replace("1", CHARGE_STATES[elt])
+                elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
+                    line = line.replace(
+                        "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***",
+                        E_FIELDS[ID]
+                    )
             else:
                 sm.write(line)
 

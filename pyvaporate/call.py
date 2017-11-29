@@ -9,7 +9,8 @@ MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
 MGN_INI_LINES = open("{}/meshgen.ini".format(
     "/".join(__file__.split("/")[:-1]))
 ).readlines()
-
+ELTS = {"10": "W"}
+E_FIELDS = {"10": 57.1e-9}
 
 def call_tapsim(node_file, n_events):
     """
@@ -29,9 +30,22 @@ def call_tapsim(node_file, n_events):
 
     sm_lines = open("sampleMesh.cfg").readlines()
     with open("sampleMesh.cfg", "w") as sm:
-        #TODO: Actually edit the cfg file with atom names and information.
         for line in sm_lines:
-            sm.write(line)
+            if "ID" in line and line[-1] not in ["1", "2", "3"]:
+                ID = line.split()[-1]
+                elt = ELTS[ID]
+            if "***_SET_NAME_HERE_***" in line:
+                line = line.replace("***_SET_NAME_HERE_***", elt)
+            elif "***_SET_MASS_HERE_***" in line:
+                line = line.replace("***_SET_MASS_HERE_***", MASSES[elt])
+            elif "EVAPORATION_CHARGE_STATE" in line:
+                line = line.replace("1", CHARGE_STATES[elt])
+            elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
+                line = line.replace(
+                    "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***", E_FIELDS[ID]
+                )
+            else:
+                sm.write(line)
 
     print("Running TAPSim")
     _ = subprocess.check_output(

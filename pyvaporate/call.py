@@ -61,6 +61,20 @@ def call_tapsim(node_file, n_events):
     )
 
 
+def update_emitter(node_file, results_file):
+    """
+    """
+    emitter_lines = open(node_file).readlines()
+    results_lines = open(results_file).readlines()
+    results_lines = results_lines[results_lines.index("ASCII")+1:]
+    remove_numbers = [line.split()[2] for line in results_lines]
+    emitter_lines = [
+        l for l in emitter_lines if l.split()[-1] not in remove_numbers
+    ]
+    with open(node_file, "w") as nf:
+        for line in emitter_lines:
+            nf.write(line)
+
 def write_meshgen_ini():
     with open("meshgen.ini", "w") as mgn:
         for line in MGN_INI_LINES:

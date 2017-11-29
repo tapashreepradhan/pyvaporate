@@ -6,7 +6,11 @@ import numpy as np
 from random import randint
 
 
-def build_emitter(element, basis, z_axis, x_axis="auto",
+ELTS = {"10": "W"}
+MASSES = {"W": "183.85"}
+
+
+def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
                   y_axis="auto", emitter_radius=100, emitter_side_height=50,
                   vacuum_radius=25, alloy=False):
     """
@@ -14,6 +18,7 @@ def build_emitter(element, basis, z_axis, x_axis="auto",
     element, basis, orientation, and dimensions.
     """
 
+    IDS = ["10"]
 
     if x_axis == "auto" and y_axis == "auto":
         if 0.99 < np.dot(z_axis, (1, 0, 0)) < 1.01:
@@ -136,20 +141,13 @@ def build_emitter(element, basis, z_axis, x_axis="auto",
         for i in substitution_indices:
             emitter_points[i][3] = 11
 
-
-    return (emitter_points, vacuum_points, bottom_points)
-
-
-def write_emitter_file(nodes, filename="emitter.txt"):
-    """
-    Write a TAPSim node file based on a set of nodes from
-    build_emitter().
-    """
-    emitter_pts, vacuum_pts, bottom_pts = nodes[0], nodes[1], nodes[2]
-    with open("emitter.txt", "w") as e:
-        n_nodes = len(emitter_pts)+len(vacuum_pts)+len(bottom_pts)
+    with open(filename, "w") as e:
+        n_nodes = number
         e.write("ASCII {} 1 0\n".format(n_nodes))
-        for pt in emitter_pts + vacuum_pts + bottom_pts:
+        comment = ["#"]
+        comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
+        e.write("{}\n".format(" ".join(comment)))
+        for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.

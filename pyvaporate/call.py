@@ -3,9 +3,9 @@ import subprocess
 import os
 
 
-LAMMPS_CMD = os.environ["LAMMPS_CMD"]
-TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
-MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
+#LAMMPS_CMD = os.environ["LAMMPS_CMD"]
+#TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
+#MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
 MGN_INI_LINES = open("{}/meshgen.ini".format(
     "/".join(__file__.split("/")[:-1]))
 ).readlines()
@@ -81,8 +81,58 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def call_lammps(emitter_file):
+def relax_emitter(emitter_file, input_file):
 
     #TODO: Build emitter_relax.in
+    convert_emitter_to_lammps(emitter_file)
+    write_lammps_input_file("data.emitter")
 
-    _ = subprocess.check_output([LAMMPS_CMD, "emitter_relax.in"])
+    _ = subprocess.check_output([LAMMPS_CMD, "in.emitter_relax"])
+
+
+def convert_emitter_to_lammps(emitter_file):
+
+    emitter_lines = open(emitter_file).readlines()
+    atom_lines = [l for l in emitter_lines[2:] if l.split()[-2] not in
+                  ["0", "1", "2", "3"]]
+    atom_types = [t.split("=")[-1] for t in emitter_lines[1].split()[1:]]
+    print(atom_types)
+    atom_coords = []
+    for line in atom_lines:
+        split_line = line.split()
+        atom_coords.append([str(atom_types.index(ELTS[split_line[-2]])+1)]+[str(float(x)*1e10) for x in split_line[:3]])
+    x_coords = [float(a[1]) for a in atom_coords]
+    y_coords = [float(a[2]) for a in atom_coords]
+    z_coords = [float(a[3]) for a in atom_coords]
+    xlim = (min(x_coords), max(x_coords))
+    ylim = (min(y_coords), max(y_coords))
+    zlim = (min(z_coords), max(z_coords))
+
+    with open("data.emitter", "w") as dat:
+        dat.write("LAMMPS Emitter\n\n")
+        dat.write("{} atoms\n\n".format(len(atom_lines)))
+        dat.write("{} atom types\n\n".format(len(atom_types)))
+        dat.write("{} {} xlo xhi\n".format(xlim[0], xlim[1]))
+        dat.write("{} {} ylo yhi\n".format(ylim[0], ylim[1]))
+        dat.write("{} {} zlo zhi\n\n".format(zlim[0], zlim[1]))
+        dat.write("Masses\n\n")
+        for elt in atom_types:
+            dat.write("{} {}\n".format(atom_types.index(elt)+1, MASSES[elt]))
+        dat.write("\nAtoms\n\n")
+        i = 1
+        for atom in atom_coords:
+            dat.write("{}\n".format(" ".join([str(i)]+atom)))
+            i += 1
+
+
+def write_lammps_input_file(structure_file):
+    with open("in.emitter_relax", "w") as er:
+        er.write("# Emitter Relaxation\n\n")
+        er.write("units real\n atom_style atomic\n\nread_data {}\n\n".format(structure_file))
+        er.write("pair_style meam\n")
+        er.write("pair_coeff * * /u/mashton/software/lammps/library.meam W NULL W\n")
+        er.write("neighbor 1.0 bin\n")
+        er.write("neigh_modify delay 5 every 1\n")
+        er.write("fix 1 all nve\n")
+        er.write("timestep 0.005\n")
+        er.write("run 100")

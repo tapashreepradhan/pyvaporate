@@ -83,8 +83,7 @@ def write_meshgen_ini():
 
 def relax_emitter(emitter_file):
 
-    #TODO: Build emitter_relax.in
-    convert_emitter_to_lammps(emitter_file)
+    convert_emitter_to_lammps(emitter_file, find_surface_atoms())
     write_lammps_input_file("data.emitter")
 
     _ = subprocess.check_output([LAMMPS_CMD, "in.emitter_relax"])

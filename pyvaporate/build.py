@@ -60,7 +60,7 @@ def build_emitter(element, basis, z_axis, x_axis="auto",
             symbol=element
         )
     elif basis.lower() == "sc":
-        lattice = SimpleCubic(  
+        lattice = SimpleCubic(
             size=(1, 1, 1),
             directions=[x_axis, y_axis, z_axis],
             symbol=element
@@ -123,18 +123,17 @@ def build_emitter(element, basis, z_axis, x_axis="auto",
             j += 1
     for i in substitution_indices:
         emitter_points[i][3] = 11
-        
+
 
     return (emitter_points, vacuum_points, bottom_points)
 
 
-def write_emitter_file(emitter_pts, vacuum_pts, bottom_pts,
-                       filename="emitter.txt"):
+def write_emitter_file(nodes, filename="emitter.txt"):
     """
     Write a TAPSim node file based on a set of nodes from
     build_emitter().
     """
-
+    emitter_pts, vacuum_pts, bottom_pts = nodes[0], nodes[1], nodes[2]
     with open("emitter.txt", "w") as e:
         n_nodes = len(emitter_pts)+len(vacuum_pts)+len(bottom_pts)
         e.write("ASCII {} 0 0\n".format(n_nodes))

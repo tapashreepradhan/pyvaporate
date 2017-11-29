@@ -81,7 +81,7 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def relax_emitter(emitter_file, input_file):
+def relax_emitter(emitter_file):
 
     #TODO: Build emitter_relax.in
     convert_emitter_to_lammps(emitter_file)

@@ -43,7 +43,7 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def call_lammps(emitter_file)
+def call_lammps(emitter_file):
 
     #TODO: Build emitter_relax.in
 

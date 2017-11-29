@@ -8,7 +8,7 @@ from random import randint
 
 def build_emitter(element, basis, z_axis, x_axis="auto",
                   y_axis="auto", emitter_radius=100, emitter_side_height=50,
-                  vacuum_radius=25):
+                  vacuum_radius=25, alloy=False):
     """
     Build an emitter (set of nodes, TAPSim style) based on an
     element, basis, orientation, and dimensions.
@@ -111,18 +111,19 @@ def build_emitter(element, basis, z_axis, x_axis="auto",
             pt.append(0)  # vacuum ID
             vacuum_points.append(pt)
 
-    conc = 0.05  # 10%
-    substitution_indices = []
-    num_atoms = len(emitter_points)
-    num_substitution_atoms = math.floor(conc*num_atoms)
-    j = 0
-    while j < num_substitution_atoms:
-        x = randint(0, num_atoms)
-        if x not in substitution_indices:
-            substitution_indices.append(x)
-            j += 1
-    for i in substitution_indices:
-        emitter_points[i][3] = 11
+    if alloy:
+        conc = 0.05  # 10%
+        substitution_indices = []
+        num_atoms = len(emitter_points)
+        num_substitution_atoms = math.floor(conc*num_atoms)
+        j = 0
+        while j < num_substitution_atoms:
+            x = randint(0, num_atoms)
+            if x not in substitution_indices:
+                substitution_indices.append(x)
+                j += 1
+        for i in substitution_indices:
+            emitter_points[i][3] = 11
 
 
     return (emitter_points, vacuum_points, bottom_points)

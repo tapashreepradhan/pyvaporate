@@ -18,9 +18,10 @@ def call_tapsim(node_file, n_events):
     evaporation steps before stopping.
     """
 
+    print("Writing meshgen.ini")
     write_meshgen_ini()
 
-
+    print("Creating sampleMesh.bin and sampleMesh.cfg")
     _ = subprocess.check_output(
         [MESHGEN_CMD, node_file, "sampleMesh.bin",
          "--create-config-template=sampleMesh.cfg"]
@@ -32,6 +33,7 @@ def call_tapsim(node_file, n_events):
         for line in sm_lines:
             sm.write(line)
 
+    print("Running TAPSim")
     _ = subprocess.check_output(
         [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "sampleMesh.bin",
          "--event-limit={}".format(n_events)]

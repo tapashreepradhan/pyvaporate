@@ -20,10 +20,10 @@ def call_tapsim(node_file, n_events):
 
     write_meshgen_ini()
 
+
     _ = subprocess.check_output(
-        "{} {} sampleMesh.bin --create-config-template=sampleMesh.cfg".format(
-            MESHGEN_CMD, node_file
-        )
+        [MESHGEN_CMD, node_file, "sampleMesh.bin",
+         "--create-config-template=sampleMesh.cfg"]
     )
 
     sm_lines = open("sampleMesh.cfg").readlines()
@@ -33,9 +33,8 @@ def call_tapsim(node_file, n_events):
             sm.write(line)
 
     _ = subprocess.check_output(
-        "{} evaporation sampleMesh.cfg sampleMesh.bin --event-limit={}".format(
-            TAPSIM_CMD, n_events
-        )
+        [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "sampleMesh.bin",
+         "--event-limit={}".format(n_events)]
     )
 
 
@@ -49,4 +48,4 @@ def call_lammps(emitter_file):
 
     #TODO: Build emitter_relax.in
 
-    _ = subprocess.check_output("{} emitter_relax.in".format(LAMMPS_CMD))
+    _ = subprocess.check_output([LAMMPS_CMD, "emitter_relax.in"])

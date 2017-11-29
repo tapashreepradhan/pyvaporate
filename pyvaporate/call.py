@@ -3,9 +3,9 @@ import subprocess
 import os
 
 
-#LAMMPS_CMD = os.environ["LAMMPS_CMD"]
-#TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
-#MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
+LAMMPS_CMD = os.environ["LAMMPS_CMD"]
+TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
+MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
 MGN_INI_LINES = open("{}/meshgen.ini".format(
     "/".join(__file__.split("/")[:-1]))
 ).readlines()

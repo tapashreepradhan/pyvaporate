@@ -90,7 +90,18 @@ def relax_emitter(emitter_file):
     _ = subprocess.check_output([LAMMPS_CMD, "in.emitter_relax"])
 
 
-def convert_emitter_to_lammps(emitter_file):
+def find_surface_atoms():
+    surface_file = [f for f in os.listdir(os.getcwd()) if "surface_data" in f][-1]
+    surface_lines = open(surface_file).readlines()
+    surface_numbers = []
+    for line in surface_lines[5:]:
+        split_line = line.split()
+        if split_line[1] == "10"
+            surface_numbers.append(split_line[0])
+    return surface_numbers
+
+
+def convert_emitter_to_lammps(emitter_file, surface_numbers):
 
     emitter_lines = open(emitter_file).readlines()
     atom_lines = [l for l in emitter_lines[1:-1] if l.split()[-2] not in
@@ -100,7 +111,11 @@ def convert_emitter_to_lammps(emitter_file):
     atom_coords = []
     for line in atom_lines:
         split_line = line.split()
-        atom_coords.append([str(atom_types.index(ELTS[split_line[-2]])+1)]+[str(float(x)*1e10) for x in split_line[:3]])
+        atom_coords.append(
+            [split_line[-1], str(atom_types.index(ELTS[split_line[-2]])+1)]+
+            [str(float(x)*1e10) for x in split_line[:3]]
+        )
+
     x_coords = [float(a[1]) for a in atom_coords]
     y_coords = [float(a[2]) for a in atom_coords]
     z_coords = [float(a[3]) for a in atom_coords]
@@ -120,10 +135,15 @@ def convert_emitter_to_lammps(emitter_file):
             dat.write("{} {}\n".format(atom_types.index(elt)+1, MASSES[elt]))
         dat.write("\nAtoms\n\n")
         i = 1
+        surface_indices = []
         for atom in atom_coords:
-            dat.write("{}\n".format(" ".join([str(i)]+atom)))
+            if int(atom[0]) in surface_numbers:
+                surface_indices.append(i)
+            dat.write("{}\n".format(" ".join([str(i)]+atom[1:])))
             i += 1
-
+    with open("surface_indices.txt", "w") as si:
+        for index in surface_indices:
+            si.write("{}\n".format(index))
 
 def write_lammps_input_file(structure_file):
     with open("in.emitter_relax", "w") as er:

@@ -138,10 +138,8 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
         dat.write("\nAtoms\n\n")
         i = 1
         surface_indices = []
-        print(surface_numbers)
         for atom in atom_coords:
-            print(atom[0])
-            if int(atom[0]) in surface_numbers:
+            if atom[0] in surface_numbers:
                 surface_indices.append(i)
             dat.write("{}\n".format(" ".join([str(i)]+atom[1:])))
             i += 1

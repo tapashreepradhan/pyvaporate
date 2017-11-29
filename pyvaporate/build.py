@@ -144,12 +144,12 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     with open(filename, "w") as e:
         n_nodes = number
         e.write("ASCII {} 1 0\n".format(n_nodes))
-        comment = ["#"]
-        comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
-        e.write("{}\n".format(" ".join(comment)))
         for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.
                 e.write("	".join([str(i) for i in pt]))
                 e.write("\n")
+        comment = ["#"]
+        comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
+        e.write("{}\n".format(" ".join(comment)))

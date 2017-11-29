@@ -138,7 +138,9 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
         dat.write("\nAtoms\n\n")
         i = 1
         surface_indices = []
+        print(surface_numbers)
         for atom in atom_coords:
+            print(atom[0])
             if int(atom[0]) in surface_numbers:
                 surface_indices.append(i)
             dat.write("{}\n".format(" ".join([str(i)]+atom[1:])))
@@ -156,6 +158,7 @@ def write_lammps_input_file(structure_file):
         er.write("pair_coeff * * /u/mashton/software/lammps/library.meam W NULL W\n\n")
         er.write("neighbor 1.0 bin\n")
         er.write("neigh_modify delay 5 every 1\n\n")
+        er.write("")
         er.write("fix 1 all nve\n")
         er.write("timestep 0.005\n")
         er.write("run 100")

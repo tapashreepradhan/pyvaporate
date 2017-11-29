@@ -6,7 +6,9 @@ import os
 LAMMPS_CMD = os.environ["LAMMPS_CMD"]
 TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
 MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
-MGN_INI_LINES = open("{}/meshgen.ini".format(__file__.split("/")[:-1])).readlines()
+MGN_INI_LINES = open("{}/meshgen.ini".format(
+    os.path.join(__file__.split("/")[:-1]))
+).readlines()
 
 
 def call_tapsim(node_file, n_events):

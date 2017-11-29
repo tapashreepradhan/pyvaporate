@@ -144,7 +144,7 @@ def write_emitter_file(nodes, filename="emitter.txt"):
     emitter_pts, vacuum_pts, bottom_pts = nodes[0], nodes[1], nodes[2]
     with open("emitter.txt", "w") as e:
         n_nodes = len(emitter_pts)+len(vacuum_pts)+len(bottom_pts)
-        e.write("ASCII {} 1 1\n".format(n_nodes))
+        e.write("ASCII {} 1 0\n".format(n_nodes))
         for pt in emitter_pts + vacuum_pts + bottom_pts:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not

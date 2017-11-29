@@ -93,9 +93,9 @@ def relax_emitter(emitter_file):
 def convert_emitter_to_lammps(emitter_file):
 
     emitter_lines = open(emitter_file).readlines()
-    atom_lines = [l for l in emitter_lines[2:] if l.split()[-2] not in
+    atom_lines = [l for l in emitter_lines[1:-1] if l.split()[-2] not in
                   ["0", "1", "2", "3"]]
-    atom_types = [t.split("=")[-1] for t in emitter_lines[1].split()[1:]]
+    atom_types = [t.split("=")[-1] for t in emitter_lines[-1].split()[1:]]
     print(atom_types)
     atom_coords = []
     for line in atom_lines:

@@ -31,7 +31,7 @@ def call_tapsim(node_file, n_events):
     sm_lines = open("sampleMesh.cfg").readlines()
     with open("sampleMesh.cfg", "w") as sm:
         for line in sm_lines:
-            if "ID" in line and line[-1] not in ["0", "1", "2", "3"]:
+            if "ID" in line and line.split()[-1] not in ["0", "1", "2", "3"]:
                 ID = line.split()[-1]
                 elt = ELTS[ID]
             if "***_SET_NAME_HERE_***" in line:

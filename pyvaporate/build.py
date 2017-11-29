@@ -87,35 +87,39 @@ def build_emitter(element, basis, z_axis, x_axis="auto",
     emitter_points, vacuum_points, bottom_points = [], [], []
     number = 0
     for pt in pts:
-        number += 1
         pt = [pt[0], pt[1], pt[2]-min_z]
         if (pt[2] < 1e-5 and (pt[0]-cx)**2+(pt[1]-cy)**2<R**2):
             pt = [pt[0], pt[1], 0.0]
             pt = [i*1e-10 for i in pt]
             pt.append(2)  # bottom ID
             pt.append(number)
+            number += 1
             bottom_points.append(pt)
         elif (pt[2]<emitter_side_height and (pt[0]-cx)**2+(pt[1]-cy)**2\
                 <emitter_radius**2):
             pt = [i*1e-10 for i in pt]
             pt.append(10)  # emitter ID
             pt.append(number)
+            number += 1
             emitter_points.append(pt)
         elif (pt[0]-cx)**2+(pt[1]-cy)**2+(pt[2]-emitter_side_height)**2\
                 <emitter_radius**2:
             pt = [i*1e-10 for i in pt]
             pt.append(10)  # emitter ID
             pt.append(number)
+            number += 1
             emitter_points.append(pt)
         elif (pt[2]<emitter_side_height and (pt[0]-cx)**2+(pt[1]-cy)**2<R**2):
             pt = [i*1e-10 for i in pt]
             pt.append(0)  # vacuum ID
             pt.append(number)
+            number += 1
             vacuum_points.append(pt)
         elif (pt[0]-cx)**2+(pt[1]-cy)**2+(pt[2]-emitter_side_height)**2<R**2:
             pt = [i*1e-10 for i in pt]
             pt.append(0)  # vacuum ID
             pt.append(number)
+            number += 1
             vacuum_points.append(pt)
 
     if alloy:

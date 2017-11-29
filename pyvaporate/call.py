@@ -50,6 +50,7 @@ def call_tapsim(node_file, n_events):
                         "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***",
                         E_FIELDS[ID]
                     )
+                sm.write(line)
             else:
                 sm.write(line)
 

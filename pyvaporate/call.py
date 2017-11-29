@@ -57,7 +57,7 @@ def call_tapsim(node_file, n_events):
     print("Running TAPSim")
     _ = subprocess.check_output(
         [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "sampleMesh.bin",
-         "--event-limit={}".format(n_events)]
+         "--event-limit={} --write-ascii".format(n_events)]
     )
 
 
@@ -129,10 +129,11 @@ def write_lammps_input_file(structure_file):
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
         er.write("units real\n atom_style atomic\n\nread_data {}\n\n".format(structure_file))
+        er.write("boundary s s s\n\n")
         er.write("pair_style meam\n")
-        er.write("pair_coeff * * /u/mashton/software/lammps/library.meam W NULL W\n")
+        er.write("pair_coeff * * /u/mashton/software/lammps/library.meam W NULL W\n\n")
         er.write("neighbor 1.0 bin\n")
-        er.write("neigh_modify delay 5 every 1\n")
+        er.write("neigh_modify delay 5 every 1\n\n")
         er.write("fix 1 all nve\n")
         er.write("timestep 0.005\n")
         er.write("run 100")

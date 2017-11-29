@@ -11,6 +11,8 @@ MGN_INI_LINES = open("{}/meshgen.ini".format(
 ).readlines()
 ELTS = {"10": "W"}
 E_FIELDS = {"10": 57.1e-9}
+MASSES = {"W": 183.85}
+CHARGE_STATES = {"W": 3}
 
 def call_tapsim(node_file, n_events):
     """

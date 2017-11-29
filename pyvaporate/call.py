@@ -83,10 +83,13 @@ def write_meshgen_ini():
 
 def relax_emitter(emitter_file):
 
+    print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps(emitter_file, find_surface_atoms())
+    print("Writing LAMMPS input file")
     write_lammps_input_file("data.emitter")
 
-    _ = subprocess.check_output([LAMMPS_CMD, "in.emitter_relax"])
+    print("Running LAMMPS")
+    _ = subprocess.check_output([LAMMPS_CMD, "-l log.lammps -i in.emitter_relax"])
 
 
 def find_surface_atoms():
@@ -117,9 +120,9 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
             [str(float(x)*1e10) for x in split_line[:3]]
         )
 
-    x_coords = [float(a[1]) for a in atom_coords]
-    y_coords = [float(a[2]) for a in atom_coords]
-    z_coords = [float(a[3]) for a in atom_coords]
+    x_coords = [float(a[2]) for a in atom_coords]
+    y_coords = [float(a[3]) for a in atom_coords]
+    z_coords = [float(a[4]) for a in atom_coords]
     xlim = (min(x_coords), max(x_coords))
     ylim = (min(y_coords), max(y_coords))
     zlim = (min(z_coords), max(z_coords))

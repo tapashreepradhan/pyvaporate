@@ -94,6 +94,7 @@ def relax_emitter(emitter_file, step_number, n_nodes):
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("{}_relaxed.txt".format(step_number), step_number, {"1": "10"}, n_nodes)
     add_bottom_and_vacuum_nodes("emitter_{}.txt".format(step_number), "emitter_0.txt")
+    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 
 def find_surface_atoms():

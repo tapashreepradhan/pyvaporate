@@ -196,5 +196,5 @@ def write_lammps_input_file(structure_file, step_number):
         er.write("velocity inner set 0 0 0\n")
         er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
-        er.write("minimize 1e-8 1e-8 1000 1000")
-        er.write("write_dump 1 all custom {}_relaxed.txt x y z type id\n".format(step_number))
+        er.write("minimize 1e-8 1e-8 1000 1000\n")
+        er.write("write_dump 1 all custom dump.{} x y z type id".format(step_number))

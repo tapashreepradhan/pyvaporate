@@ -86,7 +86,7 @@ def relax_emitter(emitter_file, step_number):
     print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps(emitter_file, find_surface_atoms())
     print("Writing LAMMPS input file")
-    write_lammps_input_file("data.emitter")
+    write_lammps_input_file("data.emitter", step_number)
 
     print("Running LAMMPS")
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
@@ -143,13 +143,11 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
         for elt in atom_types:
             dat.write("{} {}\n".format(atom_types.index(elt)+1, MASSES[elt]))
         dat.write("\nAtoms\n\n")
-        i = 1
         fixed_indices = []
         for atom in atom_coords:
             if atom[0] not in surface_numbers:
-                fixed_indices.append(i)
-            dat.write("{}\n".format(" ".join([str(i)]+atom[1:])))
-            i += 1
+                fixed_indices.append(atom[0])
+            dat.write("{}\n".format(" ".join(atom)))
     with open("fixed_indices.txt", "w") as fi:
         for index in fixed_indices:
             fi.write("{}\n".format(index))
@@ -185,7 +183,7 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
             e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
         e.write(comment_line)
 
-def write_lammps_input_file(structure_file):
+def write_lammps_input_file(structure_file, step_number):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
@@ -198,5 +196,5 @@ def write_lammps_input_file(structure_file):
         er.write("velocity inner set 0 0 0\n")
         er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
-        er.write("dump 1 all xyz 1000 *.xyz\n")
         er.write("minimize 1e-8 1e-8 1000 1000")
+        er.write("write_dump 1 all custom {}_relaxed.txt x y z type id\n".format(step_number))

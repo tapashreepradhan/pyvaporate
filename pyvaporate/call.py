@@ -61,11 +61,11 @@ def call_tapsim(node_file, n_events):
     )
 
 
-def update_emitter(node_file, results_file):
+def update_emitter(node_file):
     """
     """
     emitter_lines = open(node_file).readlines()
-    results_lines = open(results_file).readlines()
+    results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
     emitter_lines = [
@@ -81,7 +81,7 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def relax_emitter(emitter_file):
+def relax_emitter(emitter_file, step_number):
 
     print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps(emitter_file, find_surface_atoms())
@@ -91,6 +91,10 @@ def relax_emitter(emitter_file):
     print("Running LAMMPS")
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
+    print("Converting LAMMPS structure back to emitter")
+    xyz_file = [f for f in os.listdir(os.getcwd()) if ".xyz" in f][-1]
+    convert_xyz_to_emitter(xyz_file, step_number, {"1": "10"}, 234746)
+    add_bottom_and_vacuum_nodes("emitter.txt", "emitter_{}.txt".format(step_number))
 
 
 def find_surface_atoms():
@@ -165,10 +169,10 @@ def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes
             i += 1
 
 
-def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, results_file):
+def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
     initial_lines = open(initial_emitter_file).readlines()
     comment_line = initial_lines[-1]
-    results_lines = open(results_file).readlines()
+    results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
 
     with open(emitter_file, "a") as e:

@@ -174,7 +174,7 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, results_file
                 e.write(line)
         for line in results_lines:
             sl = line.split()
-            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2])))
+            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
 
 
 def write_lammps_input_file(structure_file):

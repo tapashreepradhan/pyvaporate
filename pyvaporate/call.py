@@ -167,6 +167,7 @@ def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes
 
 def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, results_file):
     initial_lines = open(initial_emitter_file).readlines()
+    comment_line = initial_lines[-1]
     results_lines = open(results_file).readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
 
@@ -178,7 +179,7 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, results_file
         for line in results_lines:
             sl = line.split()
             e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
-
+        e.write(comment_line)
 
 def write_lammps_input_file(structure_file):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]

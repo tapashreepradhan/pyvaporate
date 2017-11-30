@@ -168,9 +168,9 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, results_file
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
 
     with open(emitter_file, "a") as e:
-        for line in initial_lines:
+        for line in initial_lines[1:]:
             sl = line.split()
-            if sl[-1] in ["0", "2"]:  # Vacuum or bottom node
+            if sl[-2] in ["0", "2"]:  # Vacuum or bottom node
                 e.write(line)
         for line in results_lines:
             sl = line.split()

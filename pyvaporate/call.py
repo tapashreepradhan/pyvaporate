@@ -199,10 +199,10 @@ def remove_duplicate_nodes(emitter_file):
         else:
             n_duplicates += 1
     with open(emitter_file, "w") as e:
-        e.write("ASCII {} 1 0\n".format(original_n_nodes-n_duplicates)
+        e.write("ASCII {} 1 0\n".format(original_n_nodes-n_duplicates))
         for line in unique_lines:
             e.write(line)
-
+        e.write(e_lines[-1])
 
 def write_lammps_input_file(structure_file, step_number):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]

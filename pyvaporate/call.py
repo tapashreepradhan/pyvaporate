@@ -89,7 +89,8 @@ def relax_emitter(emitter_file):
     write_lammps_input_file("data.emitter")
 
     print("Running LAMMPS")
-    _ = subprocess.check_output([LAMMPS_CMD, "-l log.lammps -i in.emitter_relax"])
+    _ = subprocess.check_output([LAMMPS_CMD, "-l log.lammps",
+                                 "-i in.emitter_relax"])
 
 
 def find_surface_atoms():
@@ -153,14 +154,14 @@ def write_lammps_input_file(structure_file):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
-        er.write("units real\n atom_style atomic\n\nread_data {}\n\n".format(structure_file))
-        er.write("pair_style meam\n")
-        er.write("pair_coeff * * /u/mashton/software/lammps/library.meam W NULL W\n\n")
+        er.write("units real\natom_style atomic\n\nread_data {}\n\n".format(structure_file))
+        er.write("pair_style meam/c\n")
+        er.write("pair_coeff * * /u/mashton/software/lammps/potentials/library.meam W NULL W\n\n")
         er.write("neighbor 1.0 bin\n")
         er.write("neigh_modify delay 5 every 1\n\n")
         er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
         er.write("velocity inner set 0 0 0\n")
         er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
-        er.write("timestep 0.005\n")
-        er.write("run 100")
+        er.write("dump 1 all xyz 1000 *.xyz\n")
+        er.write("minimize 1e-12 1e-12 1000 1000")

@@ -89,8 +89,8 @@ def relax_emitter(emitter_file):
     write_lammps_input_file("data.emitter")
 
     print("Running LAMMPS")
-    _ = subprocess.check_output([LAMMPS_CMD, "-l log.lammps",
-                                 "-i in.emitter_relax"])
+    _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
+                                 "-i", "in.emitter_relax"])
 
 
 def find_surface_atoms():

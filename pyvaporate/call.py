@@ -153,17 +153,19 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
             fi.write("{}\n".format(index))
 
 
-def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes):
+def convert_lammps_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("emitter_{}.txt".format(step_number), "w") as e:
         e.write("ASCII {} 1 0\n".format(n_nodes))
         i = 1
-        for line in xyz_lines[2:]:
+        for line in xyz_lines[9:]:
             sl = line.split()
-            x = str(float(sl[1])*1e-10)
-            y = str(float(sl[2])*1e-10)
-            z = str(float(sl[3])*1e-10)
-            e.write("{}\n".format("	".join([x, y, z, id_dict[sl[0]], str(i)])))
+            x = str(float(sl[0])*1e-10)
+            y = str(float(sl[1])*1e-10)
+            z = str(float(sl[2])*1e-10)
+            atom_type = id_dict[sl[3]]
+            atom_id = sl[4]
+            e.write("{}\n".format("	".join([x, y, z, atom_type, atom_id)))
             i += 1
 
 
@@ -191,10 +193,9 @@ def write_lammps_input_file(structure_file, step_number):
         er.write("pair_style meam/c\n")
         er.write("pair_coeff * * /u/mashton/software/lammps/potentials/library.meam W NULL W\n\n")
         er.write("neighbor 1.0 bin\n")
-        er.write("neigh_modify delay 5 every 1\n\n")
         er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
         er.write("velocity inner set 0 0 0\n")
         er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
         er.write("minimize 1e-8 1e-8 1000 1000\n")
-        er.write("write_dump 1 all custom dump.{} x y z type id".format(step_number))
+        er.write("write_dump all custom {}_relaxed.txt x y z type id".format(step_number))

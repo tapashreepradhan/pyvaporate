@@ -94,7 +94,7 @@ def relax_emitter(emitter_file, step_number):
     print("Converting LAMMPS structure back to emitter")
     xyz_file = [f for f in os.listdir(os.getcwd()) if ".xyz" in f][-1]
     convert_xyz_to_emitter(xyz_file, step_number, {"1": "10"}, 234746)
-    add_bottom_and_vacuum_nodes("emitter.txt", "emitter_{}.txt".format(step_number))
+    add_bottom_and_vacuum_nodes("emitter_{}.txt".format(step_number), "emitter.txt")
 
 
 def find_surface_atoms():
@@ -199,4 +199,4 @@ def write_lammps_input_file(structure_file):
         er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
         er.write("dump 1 all xyz 1000 *.xyz\n")
-        er.write("minimize 1e-12 1e-12 1000 1000")
+        er.write("minimize 1e-8 1e-8 1000 1000")

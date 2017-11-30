@@ -158,7 +158,10 @@ def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict):
         i = 1
         for line in xyz_lines[2:]:
             sl = line.split()
-            e.write("{}\n".format("	".join([sl[1], sl[2], sl[3], id_dict[sl[0]], str(i)])))
+            x = str(float(sl[1])*1e-10)
+            y = str(float(sl[2])*1e-10)
+            z = str(float(sl[3])*1e-10)
+            e.write("{}\n".format("	".join([x, y, z, id_dict[sl[0]], str(i)])))
             i += 1
 
 

@@ -150,6 +150,18 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
         for index in fixed_indices:
             fi.write("{}\n".format(index))
 
+
+def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict):
+    xyz_lines = open(relaxed_structure_file).readlines()
+    with open("emitter_{}.txt".format(step_number), "w") as e:
+        e.write("ASCII {} 1 0".format(xyz_lines[0].split()[0]))
+        i = 1
+        for line in xyz_lines[2:]:
+            sl = line.split()
+            e.write("	".join([sl[1], sl[2], sl[3], id_dict[sl[0], i]))
+            i += 1
+
+
 def write_lammps_input_file(structure_file):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:

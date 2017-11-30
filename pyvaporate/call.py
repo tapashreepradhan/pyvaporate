@@ -154,12 +154,27 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
 def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("emitter_{}.txt".format(step_number), "w") as e:
-        e.write("ASCII {} 1 0".format(xyz_lines[0].split()[0]))
+        e.write("ASCII {} 1 0\n".format(xyz_lines[0].split()[0]))
         i = 1
         for line in xyz_lines[2:]:
             sl = line.split()
             e.write("{}\n".format("	".join([sl[1], sl[2], sl[3], id_dict[sl[0]], str(i)])))
             i += 1
+
+
+def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, results_file):
+    initial_lines = open(initial_emitter_file).readlines()
+    results_lines = open(results_file).readlines()
+    results_lines = results_lines[results_lines.index("ASCII\n")+1:]
+
+    with open(emitter_file, "a") as e:
+        for line in initial_lines:
+            sl = line.split()
+            if sl[-1] in ["0", "2"]:  # Vacuum or bottom node
+                e.write(line)
+        for line in results_lines:
+            sl = line.split()
+            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2])))
 
 
 def write_lammps_input_file(structure_file):

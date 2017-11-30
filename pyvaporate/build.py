@@ -26,7 +26,6 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
         else:
             x_axis = tuple(np.cross(z_axis, (0, 1, 0)))
         y_axis = tuple(np.cross(z_axis, x_axis))
-        print(x_axis, y_axis, z_axis)
 
     R = emitter_radius + vacuum_radius
 

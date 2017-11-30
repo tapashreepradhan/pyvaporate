@@ -92,7 +92,7 @@ def relax_emitter(emitter_file, step_number):
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
-    convert_lammps_to_emitter("{}_relaxed.txt".format(step_number-1), step_number, {"1": "10"}, 234746)
+    convert_lammps_to_emitter("{}_relaxed.txt".format(step_number), step_number, {"1": "10"}, 234746)
     add_bottom_and_vacuum_nodes("emitter_{}.txt".format(step_number), "emitter.txt")
 
 

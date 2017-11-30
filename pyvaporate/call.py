@@ -179,9 +179,9 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
             sl = line.split()
             if sl[-2] in ["0", "2"]:  # Vacuum or bottom node
                 e.write(line)
-#        for line in results_lines:
-#            sl = line.split()
-#            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
+        for line in results_lines:
+            sl = line.split()
+            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
         e.write(comment_line)
 
 def write_lammps_input_file(structure_file, step_number):

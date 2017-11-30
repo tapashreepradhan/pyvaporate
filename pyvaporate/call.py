@@ -184,6 +184,25 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
             e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
         e.write(comment_line)
 
+
+def remove_duplicate_nodes(emitter_file):
+    e_lines = open(emitter_file).readlines()
+    original_n_nodes = int(e_lines[0].split()[1])
+    unique_coords, unique_lines = []
+    n_duplicates = 0
+    for line in e_lines:
+        sl = line.split()
+        if len(sl) > 2 and " ".join(sl[:3]) not in unique:
+            unique_coords.append(" ".join(sl[:3]))
+            unique_lines.append(line)
+        else:
+            n_duplicates += 1
+    with open(emitter_file, "w") as e:
+        e.write("ASCII {} 1 0\n".format(original_n_nodes-n_duplicates)
+        for line in unique_lines:
+            e.write(line)
+
+
 def write_lammps_input_file(structure_file, step_number):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:

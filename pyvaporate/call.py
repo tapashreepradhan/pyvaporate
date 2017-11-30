@@ -189,7 +189,7 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
 def remove_duplicate_nodes(emitter_file):
     e_lines = open(emitter_file).readlines()
     original_n_nodes = int(e_lines[0].split()[1])
-    unique_coords, unique_lines = []
+    unique_coords, unique_lines = [], []
     n_duplicates = 0
     for line in e_lines:
         sl = line.split()

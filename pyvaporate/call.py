@@ -151,10 +151,10 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
             fi.write("{}\n".format(index))
 
 
-def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict):
+def convert_xyz_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("emitter_{}.txt".format(step_number), "w") as e:
-        e.write("ASCII {} 1 0\n".format(xyz_lines[0].split()[0]))
+        e.write("ASCII {} 1 0\n".format(n_nodes)
         i = 1
         for line in xyz_lines[2:]:
             sl = line.split()

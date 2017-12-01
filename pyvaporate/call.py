@@ -81,7 +81,7 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def relax_emitter(emitter_file, step_number, n_nodes):
+def relax_emitter(emitter_file, step_number, n_nodes, n_events):
 
     print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps(emitter_file, find_surface_atoms())
@@ -92,7 +92,7 @@ def relax_emitter(emitter_file, step_number, n_nodes):
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
-    convert_lammps_to_emitter("{}_relaxed.txt".format(step_number), step_number, {"1": "10"}, n_nodes)
+    convert_lammps_to_emitter("{}_relaxed.txt".format(step_number), step_number, {"1": "10"}, n_nodes, n_events)
     add_bottom_and_vacuum_nodes("emitter_{}.txt".format(step_number), "emitter_0.txt")
     remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
@@ -153,10 +153,10 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
             fi.write("{}\n".format(index))
 
 
-def convert_lammps_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes):
+def convert_lammps_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes, n_events):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("emitter_{}.txt".format(step_number), "w") as e:
-        e.write("ASCII {} 1 0\n".format(n_nodes))
+        e.write("ASCII {} 1 0\n".format(n_nodes-n_events))
         i = 1
         for line in xyz_lines[9:]:
             sl = line.split()
@@ -180,10 +180,10 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
             sl = line.split()
             if sl[-2] in ["0", "2"]:  # Vacuum or bottom node
                 e.write(line)
-        for line in results_lines:
-            sl = line.split()
-            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
-        e.write(comment_line)
+#        for line in results_lines:
+#            sl = line.split()
+#            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
+#        e.write(comment_line)
 
 
 def remove_duplicate_nodes(emitter_file):

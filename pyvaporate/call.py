@@ -115,7 +115,7 @@ def relax_emitter(n_nodes):
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
-#    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_mesh.txt")
+    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_mesh.txt")
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 

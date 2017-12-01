@@ -115,7 +115,7 @@ def relax_emitter(n_nodes):
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
-    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_mesh.txt")
+#    add_new_vacuum_nodes()
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 
@@ -191,17 +191,12 @@ def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
             i += 1
 
 
-def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
-    initial_lines = open(initial_emitter_file).readlines()
-    comment_line = initial_lines[-1]
+def add_new_vacuum_nodes():
+    comment_line = open("emitter.txt").readlines()[-1]
     results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
 
-    with open(emitter_file, "a") as e:
-#        for line in initial_lines[1:]:
-#            sl = line.split()
-#            if sl[-2] in ["0", "2"]:  # Vacuum or bottom node
-#                e.write(line)
+    with open("relaxed_emitter.txt", "a") as e:
         for line in results_lines:
             sl = line.split()
             e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))

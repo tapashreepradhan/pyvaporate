@@ -87,7 +87,7 @@ def write_meshgen_ini():
 def relax_emitter(n_nodes):
 
     print("Converting emitter to LAMMPS structure")
-    convert_emitter_to_lammps("emitter.txt", find_surface_atoms())
+    convert_emitter_to_lammps("updated_emitter.txt", find_surface_atoms())
     print("Writing LAMMPS input file")
     write_lammps_input_file("data.emitter")
 
@@ -97,7 +97,7 @@ def relax_emitter(n_nodes):
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
     step_number = int(os.getcwd().split("/")[-1])
-    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "emitter.txt")
+    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_emitter.txt")
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 

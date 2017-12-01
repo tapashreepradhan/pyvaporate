@@ -57,7 +57,8 @@ def call_tapsim(node_file, n_events, step_number):
     print("Running TAPSim")
     _ = subprocess.check_output(
         [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "sampleMesh.bin",
-         "--event-limit={}".format(n_events), "--write-ascii"]
+         "--event-limit={}".format(n_events), "--write-ascii",
+         "--ini-file=meshgen.ini"]
     )
 
 

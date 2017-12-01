@@ -1,7 +1,5 @@
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
 
-import struct
-import binascii
 import sys
 import math
 import numpy as np
@@ -145,24 +143,12 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     with open(filename, "w") as e:
         n_nodes = number
         e.write("ASCII {} 1 0\n".format(n_nodes))
-    with open(filename, "ab") as e:
         for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.
-                tab = binascii.a2b_uu("	")
-                newline = binascii.a2b_uu("\n")
-                e.write(struct.pack("f", pt[0]))
-                e.write(tab)
-                e.write(struct.pack("f", pt[1]))
-                e.write(tab)
-                e.write(struct.pack("f", pt[2]))
-                e.write(tab)
-                e.write(struct.pack("h", pt[3]))
-                e.write(tab)
-                e.write(struct.pack("I", pt[4]))
-                e.write(newline)
-    with open(filename, "a") as e:
+                e.write("	".join([str(i) for i in pt]))
+                e.write("\n")
         comment = ["#"]
         comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
         e.write("{}\n".format(" ".join(comment)))

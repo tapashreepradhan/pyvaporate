@@ -23,16 +23,16 @@ def call_tapsim(node_file, n_events):
 
     write_meshgen_ini()
 
-    print("Creating sampleMesh.bin and sampleMesh.cfg")
+    print("Creating mesh.bin and mesh.cfg")
     _ = subprocess.check_output(
         [MESHGEN_CMD, node_file, "mesh.txt",
-         "--create-config-template=sampleMesh.cfg", "--write-ascii"]
+         "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
     assign_unique_ids()
 
-    sm_lines = open("sampleMesh.cfg").readlines()
-    with open("sampleMesh.cfg", "w") as sm:
+    sm_lines = open("mesh.cfg").readlines()
+    with open("mesh.cfg", "w") as sm:
         edit = False
         for line in sm_lines:
             if "ID" in line and line.split()[-1] not in ["0", "1", "2", "3"]:
@@ -57,10 +57,9 @@ def call_tapsim(node_file, n_events):
 
     print("Running TAPSim")
     _ = subprocess.check_output(
-        [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "mesh.txt",
+        [TAPSIM_CMD, "evaporation", "mesh.cfg", "mesh.txt",
          "--event-limit={}".format(n_events), "--write-ascii"]
     )
-
 
 
 def assign_unique_ids():
@@ -76,10 +75,10 @@ def assign_unique_ids():
             i += 1
 
 
-def update_emitter():
+def update_mesh():
     """
     """
-    emitter_lines = open("emitter.txt").readlines()
+    emitter_lines = open("mesh.txt").readlines()
     results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
@@ -92,9 +91,10 @@ def update_emitter():
             sl = [sl[0], sl[1], sl[2], "0", sl[4]]
         new_line = "{}\n".format("	".join(sl))
         new_emitter_lines.append(new_line)
-    with open("updated_emitter.txt", "w") as ue:
+    with open("updated_mesh.txt", "w") as ue:
         for line in new_emitter_lines:
             ue.write(line)
+
 
 def write_meshgen_ini():
     with open("meshgen.ini", "w") as mgn:
@@ -105,7 +105,7 @@ def write_meshgen_ini():
 def relax_emitter(n_nodes):
 
     print("Converting emitter to LAMMPS structure")
-    convert_emitter_to_lammps("updated_emitter.txt", find_surface_atoms())
+    convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms())
     print("Writing LAMMPS input file")
     write_lammps_input_file("data.emitter")
 
@@ -114,7 +114,7 @@ def relax_emitter(n_nodes):
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
-    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_emitter.txt")
+    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_mesh.txt")
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 

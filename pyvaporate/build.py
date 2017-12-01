@@ -1,6 +1,7 @@
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
 
 import struct
+import binascii
 import sys
 import math
 import numpy as np
@@ -142,15 +143,16 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
             emitter_points[i][3] = 11
 
     with open(filename, "wb") as e:
-        tab = struct.pack("c", "	")
-        newline = struct.pack("c", "\n")
+        tab = binascii.a2b_uu("	")
+        newline = binascii.a2b_uu("\n")
+        space = binascii.a2b_uu(" ")
         n_nodes = number
         e.write(struct.pack("s","BINARY"))
-        e.write(struct.pack("c", " "))
+        e.write(space)
         e.write(struct.pack("i", n_nodes))
-        e.write(struct.pack("c", " "))
+        e.write(space)
         e.write(struct.pack("i", 1))
-        e.write(struct.pack("c", " "))
+        e.write(space)
         e.write(struct.pack("i", 1))
         e.write(newline)
         for pt in emitter_points + vacuum_points + bottom_points:

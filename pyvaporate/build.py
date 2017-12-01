@@ -151,7 +151,7 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
         e.write(struct.pack("c", " "))
         e.write(struct.pack("i", 1))
         e.write(struct.pack("c", " "))
-        e.write(struct.pack("i" 1))
+        e.write(struct.pack("i", 1))
         e.write(newline)
         for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be

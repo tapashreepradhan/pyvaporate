@@ -21,7 +21,6 @@ def call_tapsim(node_file, n_events):
     evaporation steps before stopping.
     """
 
-    print("Writing meshgen.ini")
     write_meshgen_ini()
 
     print("Creating sampleMesh.bin and sampleMesh.cfg")
@@ -98,7 +97,7 @@ def relax_emitter(n_nodes):
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.txt", {"1": "10"}, n_nodes)
     step_number = int(os.getcwd().split("/")[-1])
-    add_bottom_and_vacuum_nodes("emitter.txt", "../{}/emitter.txt".format(step_number-1))
+    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "emitter.txt")
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 

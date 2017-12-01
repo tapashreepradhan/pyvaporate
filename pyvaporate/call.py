@@ -86,10 +86,8 @@ def update_mesh():
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
     new_emitter_lines = []
-    print(remove_numbers)
     for line in emitter_lines:
         sl = line.split()
-        print(sl[-1])
         if sl[-1] in remove_numbers:
             sl = [sl[0], sl[1], sl[2], "0", sl[4]]
         new_line = "{}\n".format("	".join(sl))
@@ -117,7 +115,7 @@ def relax_emitter(n_nodes):
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
-    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_mesh.txt")
+#    add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "updated_mesh.txt")
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 

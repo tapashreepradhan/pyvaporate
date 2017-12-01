@@ -79,7 +79,7 @@ def update_emitter(step_number):
         for line in new_emitter_lines:
             nf.write(line)
 
-def write_meshgen_ini():
+def write_meshgen_ini(step_number):
     with open("meshgen.ini", "w") as mgn:
         for line in MGN_INI_LINES:
             if "RESULTS_FILENAME" in line:

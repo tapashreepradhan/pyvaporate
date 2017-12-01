@@ -183,7 +183,7 @@ def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
 #        for line in results_lines:
 #            sl = line.split()
 #            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
-#        e.write(comment_line)
+        e.write(comment_line)
 
 
 def remove_duplicate_nodes(emitter_file):

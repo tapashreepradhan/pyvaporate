@@ -68,11 +68,15 @@ def update_emitter(step_number):
     results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
-    emitter_lines = [
-        l for l in emitter_lines if l.split()[-1] not in remove_numbers
-    ]
+    new_emitter_lines = []
+    for line in emitter_lines:
+        sl = line.split()
+        if sl[-1] in remove_numbers:
+            sl = [s[0], sl[1], sl[2], "0", sl[4]]
+        new_line = "{}\n".format("	".join(sl))
+        new_emitter_lines.append(new_line)
     with open("emitter_{}.txt".format(step_number+1), "w") as nf:
-        for line in emitter_lines:
+        for line in new_emitter_lines:
             nf.write(line)
 
 def write_meshgen_ini():

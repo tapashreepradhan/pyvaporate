@@ -193,7 +193,7 @@ def remove_duplicate_nodes(emitter_file):
     n_duplicates = 0
     for line in e_lines:
         sl = line.split()
-        if len(sl) > 2 and " ".join(sl[:3]) not in unique:
+        if len(sl) > 2 and " ".join(sl[:3]) not in unique_coords:
             unique_coords.append(" ".join(sl[:3]))
             unique_lines.append(line)
         else:

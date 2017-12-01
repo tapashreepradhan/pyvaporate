@@ -140,15 +140,25 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
         for i in substitution_indices:
             emitter_points[i][3] = 11
 
-    with open(filename, "wb") as e:
+    with open(filename, "w") as e:
         n_nodes = number
-        e.write(bin("ASCII {} 1 0\n".format(n_nodes)))
+        e.write("ASCII {} 1 0\n".format(n_nodes))
+    with open(filename, "ab") as e:
         for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.
-                e.write(bin("	".join([str(i) for i in pt])))
-                e.write(bin("\n"))
+                e.write(pt[0])
+                e.write("	")
+                e.write(pt[1])
+                e.write("	")
+                e.write(pt[2])
+                e.write("	")
+                e.write(pt[3])
+                e.write("	")
+                e.write(bin(pt[4]))
+                e.write("\n")
+    with open(filename, "a") as e:
         comment = ["#"]
         comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
-        e.write(bin("{}\n".format(" ".join(comment))))
+        e.write("{}\n".format(" ".join(comment)))

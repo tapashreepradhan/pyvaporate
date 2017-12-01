@@ -14,7 +14,7 @@ E_FIELDS = {"10": "57.1e-9"}
 MASSES = {"W": "183.85"}
 CHARGE_STATES = {"W": "3"}
 
-def call_tapsim(node_file, n_events):
+def call_tapsim(node_file, n_events, step_number):
     """
     Run the TAPSim program, starting with building a voronoi mesh for
     an emitter (node) file and then running a set number of
@@ -22,7 +22,7 @@ def call_tapsim(node_file, n_events):
     """
 
     print("Writing meshgen.ini")
-    write_meshgen_ini()
+    write_meshgen_ini(step_number)
 
     print("Creating sampleMesh.bin and sampleMesh.cfg")
     _ = subprocess.check_output(
@@ -65,7 +65,7 @@ def update_emitter(step_number):
     """
     """
     emitter_lines = open("emitter_{}.txt".format(step_number)).readlines()
-    results_lines = open("results_data.00000001").readlines()
+    results_lines = open("results_{}.00000001".format(step_number)).readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
     new_emitter_lines = []
@@ -82,10 +82,12 @@ def update_emitter(step_number):
 def write_meshgen_ini():
     with open("meshgen.ini", "w") as mgn:
         for line in MGN_INI_LINES:
+            if "RESULTS_FILENAME" in line:
+                line = "RESULTS_FILENAME = results_{}\n".format(step_number)
             mgn.write(line)
 
 
-def relax_emitter(emitter_file, step_number, n_nodes, n_events):
+def relax_emitter(emitter_file, step_number, n_nodes):
 
     print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps(emitter_file, find_surface_atoms())
@@ -96,8 +98,8 @@ def relax_emitter(emitter_file, step_number, n_nodes, n_events):
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
-    convert_lammps_to_emitter("{}_relaxed.txt".format(step_number), step_number, {"1": "10"}, n_nodes, n_events)
-    add_bottom_and_vacuum_nodes("emitter_{}.txt".format(step_number), "emitter_0.txt")
+    convert_lammps_to_emitter("{}_relaxed.txt".format(step_number), step_number, {"1": "10"}, n_nodes)
+    add_bottom_and_vacuum_nodes("emitter_{}.txt".format(step_number), "emitter_{}.txt".format(step_number-1), step_number)
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 
@@ -157,10 +159,10 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
             fi.write("{}\n".format(index))
 
 
-def convert_lammps_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes, n_events):
+def convert_lammps_to_emitter(relaxed_structure_file, step_number, id_dict, n_nodes):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("emitter_{}.txt".format(step_number), "w") as e:
-        e.write("ASCII {} 1 0\n".format(n_nodes-n_events))
+        e.write("ASCII {} 1 0\n".format(n_nodes))
         i = 1
         for line in xyz_lines[9:]:
             sl = line.split()
@@ -173,10 +175,10 @@ def convert_lammps_to_emitter(relaxed_structure_file, step_number, id_dict, n_no
             i += 1
 
 
-def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file):
+def add_bottom_and_vacuum_nodes(emitter_file, initial_emitter_file, step_number):
     initial_lines = open(initial_emitter_file).readlines()
     comment_line = initial_lines[-1]
-    results_lines = open("results_data.00000001").readlines()
+    results_lines = open("results_{}.00000001".format(step_number)).readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
 
     with open(emitter_file, "a") as e:

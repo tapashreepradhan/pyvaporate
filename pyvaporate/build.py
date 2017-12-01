@@ -143,7 +143,7 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
             emitter_points[i][3] = 11
 
     with open(filename, "w") as e:
-        e.write("BINARY {} 1 1\n".format(n_nodes))
+        e.write("BINARY {} 1 1\n".format(number))
     with open(filename, "ab") as e:
         # tab = binascii.a2b_uu("	")
         # newline = binascii.a2b_uu("\n")

@@ -1,5 +1,6 @@
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
 
+import struct
 import binascii
 import sys
 import math
@@ -157,7 +158,7 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
                 e.write(tab)
                 e.write(pt[2])
                 e.write(tab)
-                e.write(pt[3])
+                e.write(struct.pack("h", pt[3]))
                 e.write(tab)
                 e.write(bin(pt[4]))
                 e.write(newline)

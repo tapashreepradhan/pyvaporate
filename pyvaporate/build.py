@@ -142,14 +142,21 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
             emitter_points[i][3] = 11
 
     with open(filename, "wb") as e:
+        tab = struct.pack("c", "	")
+        newline = struct.pack("c", "\n")
         n_nodes = number
-        e.write(struct.pack("s","BINARY {} 1 0\n".format(n_nodes)))
+        e.write(struct.pack("s","BINARY"))
+        e.write(struct.pack("c", " "))
+        e.write(struct.pack("i", n_nodes))
+        e.write(struct.pack("c", " "))
+        e.write(struct.pack("i", 1))
+        e.write(struct.pack("c", " "))
+        e.write(struct.pack("i" 1))
+        e.write(newline)
         for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.
-                tab = struct.pack("c", "	")
-                newline = struct.pack("c", "\n")
                 e.write(struct.pack("f", pt[0]))
                 e.write(tab)
                 e.write(struct.pack("f", pt[1]))

@@ -148,16 +148,18 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.
+                tab = binascii.a2b_uu("	")
+                newline = binascii.a2b_uu("\n")
                 e.write(pt[0])
-                e.write("	")
+                e.write(tab)
                 e.write(pt[1])
-                e.write("	")
+                e.write(tab)
                 e.write(pt[2])
-                e.write("	")
+                e.write(tab)
                 e.write(pt[3])
-                e.write("	")
+                e.write(tab)
                 e.write(bin(pt[4]))
-                e.write("\n")
+                e.write(newline)
     with open(filename, "a") as e:
         comment = ["#"]
         comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]

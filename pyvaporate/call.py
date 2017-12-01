@@ -61,17 +61,17 @@ def call_tapsim(node_file, n_events):
     )
 
 
-def update_emitter(node_file):
+def update_emitter(step_number):
     """
     """
-    emitter_lines = open(node_file).readlines()
+    emitter_lines = open("emitter_{}".format(step_number)).readlines()
     results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
     remove_numbers = [line.split()[2] for line in results_lines]
     emitter_lines = [
         l for l in emitter_lines if l.split()[-1] not in remove_numbers
     ]
-    with open(node_file, "w") as nf:
+    with open("emitter_{}".format(step_number+1), "w") as nf:
         for line in emitter_lines:
             nf.write(line)
 

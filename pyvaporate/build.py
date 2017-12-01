@@ -1,5 +1,6 @@
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
 
+import binascii
 import sys
 import math
 import numpy as np

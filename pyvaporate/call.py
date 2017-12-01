@@ -65,7 +65,7 @@ def call_tapsim(node_file, n_events):
 
 def assign_unique_ids():
     m_lines = open("mesh.txt").readlines()
-    i = 0
+    i = 1
     with open("mesh.txt", "w") as m:
         m.write(m_lines[0])
         for line in m_lines[1:]:
@@ -73,6 +73,7 @@ def assign_unique_ids():
             sl[4] = str(i)
             m.write("	".join(sl))
             m.write("\n")
+            i += 1
 
 
 def update_emitter():

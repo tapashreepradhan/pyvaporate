@@ -72,7 +72,7 @@ def update_emitter(step_number):
     for line in emitter_lines:
         sl = line.split()
         if sl[-1] in remove_numbers:
-            sl = [s[0], sl[1], sl[2], "0", sl[4]]
+            sl = [sl[0], sl[1], sl[2], "0", sl[4]]
         new_line = "{}\n".format("	".join(sl))
         new_emitter_lines.append(new_line)
     with open("emitter_{}.txt".format(step_number+1), "w") as nf:

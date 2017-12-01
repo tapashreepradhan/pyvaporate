@@ -25,9 +25,11 @@ def call_tapsim(node_file, n_events):
 
     print("Creating sampleMesh.bin and sampleMesh.cfg")
     _ = subprocess.check_output(
-        [MESHGEN_CMD, node_file, "sampleMesh.bin",
-         "--create-config-template=sampleMesh.cfg"]
+        [MESHGEN_CMD, node_file, "mesh.txt",
+         "--create-config-template=sampleMesh.cfg", "--write-ascii"]
     )
+
+    assign_unique_ids()
 
     sm_lines = open("sampleMesh.cfg").readlines()
     with open("sampleMesh.cfg", "w") as sm:
@@ -55,9 +57,21 @@ def call_tapsim(node_file, n_events):
 
     print("Running TAPSim")
     _ = subprocess.check_output(
-        [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "sampleMesh.bin",
+        [TAPSIM_CMD, "evaporation", "sampleMesh.cfg", "mesh.txt",
          "--event-limit={}".format(n_events), "--write-ascii"]
     )
+
+
+
+def assign_unique_ids():
+    m_lines = open("mesh.txt").readlines()
+    i = 0
+    with open("mesh.txt", "w") as m:
+        for line in m_lines[1:]:
+            sl = line.split()
+            sl[4] = i
+            m.write("	".join(sl))
+            m.write("\n")
 
 
 def update_emitter():

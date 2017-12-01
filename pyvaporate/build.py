@@ -142,19 +142,21 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
         for i in substitution_indices:
             emitter_points[i][3] = 11
 
-    with open(filename, "wb") as e:
-        tab = binascii.a2b_uu("	")
-        newline = binascii.a2b_uu("\n")
-        space = binascii.a2b_uu(" ")
-        n_nodes = number
-        e.write(struct.pack("s","BINARY"))
-        e.write(space)
-        e.write(struct.pack("i", n_nodes))
-        e.write(space)
-        e.write(struct.pack("i", 1))
-        e.write(space)
-        e.write(struct.pack("i", 1))
-        e.write(newline)
+    with open(filename, "w") as e:
+        e.write("BINARY {} 1 1\n".format(n_nodes))
+    with open(filename, "ab") as e:
+        # tab = binascii.a2b_uu("	")
+        # newline = binascii.a2b_uu("\n")
+        # space = binascii.a2b_uu(" ")
+        # n_nodes = number
+        # e.write(struct.pack("p","BINARY"))
+        # e.write(space)
+        # e.write(struct.pack("i", n_nodes))
+        # e.write(space)
+        # e.write(struct.pack("i", 1))
+        # e.write(space)
+        # e.write(struct.pack("i", 1))
+        # e.write(newline)
         for pt in emitter_points + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not

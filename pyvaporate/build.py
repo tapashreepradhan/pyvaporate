@@ -145,8 +145,8 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     with open(filename, "w") as e:
         e.write("BINARY {} 1 1\n".format(number))
     with open(filename, "ab") as e:
-        # tab = binascii.a2b_uu("	")
-        # newline = binascii.a2b_uu("\n")
+        tab = binascii.a2b_uu("	")
+        newline = binascii.a2b_uu("\n")
         # space = binascii.a2b_uu(" ")
         # n_nodes = number
         # e.write(struct.pack("p","BINARY"))

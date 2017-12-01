@@ -69,7 +69,7 @@ def assign_unique_ids():
     with open("mesh.txt", "w") as m:
         for line in m_lines[1:]:
             sl = line.split()
-            sl[4] = i
+            sl[4] = str(i)
             m.write("	".join(sl))
             m.write("\n")
 

@@ -95,7 +95,7 @@ def relax_emitter(n_nodes):
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
-    convert_lammps_to_emitter("relaxed_emitter.txt", {"1": "10"}, n_nodes)
+    convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
     step_number = int(os.getcwd().split("/")[-1])
     add_bottom_and_vacuum_nodes("relaxed_emitter.txt", "emitter.txt")
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
@@ -159,7 +159,7 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
 
 def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
     xyz_lines = open(relaxed_structure_file).readlines()
-    with open("emitter.txt", "w") as e:
+    with open("relaxed_emitter.txt", "w") as e:
         e.write("ASCII {} 1 0\n".format(n_nodes))
         i = 1
         for line in xyz_lines[9:]:
@@ -221,4 +221,4 @@ def write_lammps_input_file(structure_file):
         er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("fix 1 all nve\n")
         er.write("minimize 1e-8 1e-8 1000 1000\n")
-        er.write("write_dump all custom relaxed_emitter.txt x y z type id")
+        er.write("write_dump all custom relaxed_emitter.lmp x y z type id")

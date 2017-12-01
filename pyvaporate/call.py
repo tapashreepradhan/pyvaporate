@@ -14,7 +14,7 @@ E_FIELDS = {"10": "57.1e-9"}
 MASSES = {"W": "183.85"}
 CHARGE_STATES = {"W": "3"}
 
-def call_tapsim(node_file, n_events):
+def call_tapsim(node_file, n_events, id_dict):
     """
     Run the TAPSim program, starting with building a voronoi mesh for
     an emitter (node) file and then running a set number of
@@ -23,13 +23,13 @@ def call_tapsim(node_file, n_events):
 
     write_meshgen_ini()
 
-    print("Creating mesh.bin and mesh.cfg")
+    print("Creating mesh.txt and mesh.cfg")
     _ = subprocess.check_output(
         [MESHGEN_CMD, node_file, "mesh.txt",
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
-    assign_unique_ids()
+    assign_labels_and_unique_ids(id_dict)
 
     sm_lines = open("mesh.cfg").readlines()
     with open("mesh.cfg", "w") as sm:
@@ -62,7 +62,7 @@ def call_tapsim(node_file, n_events):
     )
 
 
-def assign_unique_ids():
+def assign_labels_and_unique_ids(id_dict):
     m_lines = open("mesh.txt").readlines()
     i = 1
     with open("mesh.txt", "w") as m:
@@ -73,7 +73,10 @@ def assign_unique_ids():
             m.write("	".join(sl))
             m.write("\n")
             i += 1
-
+        comment = "#"
+        for ID in id_dict:
+            comment += " {}={}".format(ID, id_dict[ID])
+        m.write(comment)
 
 def update_mesh():
     """

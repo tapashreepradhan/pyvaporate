@@ -178,7 +178,7 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
 def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("relaxed_emitter.txt", "w") as e:
-        e.write("ASCII {} 1 0\n".format(n_nodes))
+        e.write("ASCII {} 0 0\n".format(n_nodes))
         i = 1
         for line in xyz_lines[9:]:
             sl = line.split()
@@ -216,7 +216,7 @@ def remove_duplicate_nodes(emitter_file):
         else:
             n_duplicates += 1
     with open(emitter_file, "w") as e:
-        e.write("ASCII {} 1 0\n".format(original_n_nodes-n_duplicates))
+        e.write("ASCII {} 0 0\n".format(original_n_nodes-n_duplicates))
         for line in unique_lines:
             e.write(line)
         e.write(e_lines[-1])

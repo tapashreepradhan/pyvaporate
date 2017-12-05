@@ -115,7 +115,7 @@ def relax_emitter(n_nodes):
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
     convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
-#    add_new_vacuum_nodes()
+    add_original_vacuum_nodes()
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 
@@ -193,16 +193,19 @@ def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
             i += 1
 
 
-def add_new_vacuum_nodes():
-    comment_line = open("emitter.txt").readlines()[-1]
-    results_lines = open("results_data.00000001").readlines()
-    results_lines = results_lines[results_lines.index("ASCII\n")+1:]
+def add_original_vacuum_nodes():
+    original_emitter_lines = open("../0/emitter.txt").readlines()
+    original_vacuum_lines = [
+        l for l in original_emitter_lines if l.split()[3] in ["0", "2"] or
+        l[0] == "#"
+    ]
+    emitter_lines = open("emitter.txt").readlines()
+    n_nodes = int(emitter_lines[0].split()[1])+len(original_vacuum_lines)
 
-    with open("relaxed_emitter.txt", "a") as e:
-        for line in results_lines:
-            sl = line.split()
-            e.write("{}\n".format("	".join([sl[4], sl[5], sl[6], "0", sl[2]])))
-        e.write(comment_line)
+    with open("relaxed_emitter.txt", "w") as e:
+        e.write("ASCII {} 0 0\n".format(n_nodes))
+        for line in emitter_lines[1:] + original_vacuum_lines:
+            e.write(line)
 
 
 def remove_duplicate_nodes(emitter_file):

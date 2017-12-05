@@ -144,7 +144,7 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
     for line in atom_lines:
         split_line = line.split()
         atom_coords.append(
-            [n, str(atom_types.index(ELTS[split_line[-2]])+1)]+
+            [str(n), str(atom_types.index(ELTS[split_line[-2]])+1)]+
             [str(float(x)*1e10) for x in split_line[:3]]
         )
         n += 1

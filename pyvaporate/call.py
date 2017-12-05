@@ -199,12 +199,17 @@ def add_original_vacuum_nodes():
         l for l in original_emitter_lines[1:] if l[0] == "#" or
         l.split()[3] in ["0", "2"]
     ]
+
     emitter_lines = open("emitter.txt").readlines()
-    n_nodes = int(emitter_lines[0].split()[1])+len(original_vacuum_lines)
+    emitter_lines = [
+        l for l in emitter_lines[1:-1] if l.split()[3] not in
+        ["0", "2"]
+    ]
+    n_nodes = len(emitter_lines)+len(original_vacuum_lines)-1
 
     with open("relaxed_emitter.txt", "w") as e:
         e.write("ASCII {} 0 0\n".format(n_nodes))
-        for line in emitter_lines[1:] + original_vacuum_lines:
+        for line in emitter_lines + original_vacuum_lines:
             e.write(line)
 
 

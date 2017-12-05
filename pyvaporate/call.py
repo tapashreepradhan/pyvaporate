@@ -2,6 +2,8 @@ import subprocess
 
 import os
 
+from pyvaporate.evaluate import assign_ids_by_cn
+
 
 LAMMPS_CMD = os.environ["LAMMPS_CMD"]
 TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
@@ -114,7 +116,8 @@ def relax_emitter(n_nodes):
     _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
-    convert_lammps_to_emitter("relaxed_emitter.lmp", {"1": "10"}, n_nodes)
+    assign_ids_by_cn("relaxed_emitter.lmp")
+    convert_lammps_to_emitter("relaxed_emitter.lmp", n_nodes)
     add_original_vacuum_nodes()
 #    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
@@ -187,7 +190,7 @@ def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
             x = str(float(sl[0])*1e-10)
             y = str(float(sl[1])*1e-10)
             z = str(float(sl[2])*1e-10)
-            atom_type = id_dict[sl[3]]
+            atom_type = sl[3]
 #            atom_id = sl[4]
             e.write("{}\n".format("	".join([x, y, z, atom_type])))
             i += 1
@@ -242,6 +245,9 @@ def write_lammps_input_file(structure_file):
         er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
         er.write("velocity inner set 0 0 0\n")
         er.write("fix frozen inner setforce 0 0 0\n\n")
+        er.write("compute cnum all coord/atom cutoff 3.0\n")
+        er.write("dump 1 all custom 1000 cnum.dump c_cnum\n")
         er.write("fix 1 all nve\n")
         er.write("minimize 1e-8 1e-8 1000 1000\n")
-        er.write("write_dump all custom relaxed_emitter.lmp x y z type id")
+        er.write("compute 1 all coord/atom cutoff 4.0\n")
+        er.write("write_dump all custom relaxed_emitter.lmp x y z type c_cnum")

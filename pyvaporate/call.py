@@ -196,8 +196,8 @@ def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
 def add_original_vacuum_nodes():
     original_emitter_lines = open("../0/emitter.txt").readlines()
     original_vacuum_lines = [
-        l for l in original_emitter_lines if l.split()[3] in ["0", "2"] or
-        l[0] == "#"
+        l for l in original_emitter_lines[1:] if l[0] == "#" or
+        l.split()[3] in ["0", "2"]
     ]
     emitter_lines = open("emitter.txt").readlines()
     n_nodes = int(emitter_lines[0].split()[1])+len(original_vacuum_lines)

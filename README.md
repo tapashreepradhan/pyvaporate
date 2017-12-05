@@ -27,7 +27,7 @@ environment variable called `LAMMPS_CMD`.
 
 ## TAPSim Installation
 
-Visit (the University of Stuttgart's webpage)[http://www.uni-stuttgart.de/imw/mp/forschung/atom_probe_RD_center/software.en.html]
+Visit [the University of Stuttgart's webpage](http://www.uni-stuttgart.de/imw/mp/forschung/atom_probe_RD_center/software.en.html)
 and download the TAPSim tarball. Unpack it and then execute the following:
 
 ```

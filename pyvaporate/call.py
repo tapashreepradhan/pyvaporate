@@ -86,17 +86,21 @@ def update_mesh():
     emitter_lines = open("mesh.txt").readlines()
     results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
-    remove_numbers = [line.split()[2] for line in results_lines]
+    remove_ids = [line.split()[2]) for line in results_lines]
     new_emitter_lines = []
-    for line in emitter_lines:
+    i = 1
+    for line in emitter_lines[1:-1]:
         sl = line.split()
-        if sl[-1] in remove_numbers:
+        if i in remove_ids:
             sl = [sl[0], sl[1], sl[2], "0", sl[4]]
         new_line = "{}\n".format("	".join(sl))
         new_emitter_lines.append(new_line)
+        i += 1
     with open("updated_mesh.txt", "w") as ue:
+        ue.write(emitter_lines[0])
         for line in new_emitter_lines:
             ue.write(line)
+        ue.write(emitter_lines[-1])
 
 
 def write_meshgen_ini():

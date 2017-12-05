@@ -1,7 +1,7 @@
 
 
 
-def assign_ids_by_cn(lammps_file, id_dict):
+def assign_ids_by_cn(lammps_file):
     """
     Assign ID's to distinguish between atoms of various coordinations.
     """

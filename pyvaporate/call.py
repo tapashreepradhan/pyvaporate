@@ -86,7 +86,7 @@ def update_mesh():
     emitter_lines = open("mesh.txt").readlines()
     results_lines = open("results_data.00000001").readlines()
     results_lines = results_lines[results_lines.index("ASCII\n")+1:]
-    remove_ids = [line.split()[2]) for line in results_lines]
+    remove_ids = [line.split()[2] for line in results_lines]
     new_emitter_lines = []
     i = 1
     for line in emitter_lines[1:-1]:

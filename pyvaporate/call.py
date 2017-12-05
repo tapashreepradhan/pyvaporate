@@ -188,8 +188,8 @@ def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
             y = str(float(sl[1])*1e-10)
             z = str(float(sl[2])*1e-10)
             atom_type = id_dict[sl[3]]
-            atom_id = sl[4]
-            e.write("{}\n".format("	".join([x, y, z, atom_type, atom_id])))
+#            atom_id = sl[4]
+            e.write("{}\n".format("	".join([x, y, z, atom_type])))
             i += 1
 
 

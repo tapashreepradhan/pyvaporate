@@ -2,7 +2,7 @@
 
 Python Package for simulating full-scale (DFT-MD-MC) field evaporation.
 
-#Installation
+# Installation
 ------
 ```bash
 $ git clone https://github.com/ashtonmv/pyvaporate
@@ -13,7 +13,7 @@ Add pyvaporate to your `$PYTHONPATH`.
 Pyvaporate requires the installation of LAMMPS (molecular dynamics) and TAPSim
 (monte carlo field evaporation).
 
-##LAMMPS Installation##
+## LAMMPS Installation
 
 ```
 $ git clone https://github.com/lammps/lammps.git
@@ -25,7 +25,7 @@ $ make mpi
 Export the location of the create LAMMPS executable (`lmp_mpi`) to an
 environment variable called `LAMMPS_CMD`.
 
-##TAPSim Installation##
+## TAPSim Installation
 
 Visit (the University of Stuttgart's webpage)[http://www.uni-stuttgart.de/imw/mp/forschung/atom_probe_RD_center/software.en.html]
 and download the TAPSim tarball. Unpack it and then execute the following:
@@ -38,7 +38,7 @@ $ make
 Export the location of the `tapsim` and `meshgen` binaries created in `./bin`
 to environment variables called `TAPSIM_CMD` and `MESHGEN_CMD`, respectively.
 
-#Usage
+# Usage
 ------
 
 Create a `.yaml` file with specifications of the system you wish to evaporate.
@@ -53,7 +53,7 @@ elements:
     e_fields:
       all: auto  # If "auto" is specified, all evaporation fields are looked up
                  # from PyVaporate's tables.
-      # Otherwise, specify the evaporation field (N/m) for 
+      # Otherwise, specify the evaporation field (N/m) for
       # atoms of each coordination.
       1: auto
       2: auto

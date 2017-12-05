@@ -184,7 +184,7 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
             fi.write("{}\n".format(index))
 
 
-def convert_lammps_to_emitter(relaxed_structure_file, id_dict, n_nodes):
+def convert_lammps_to_emitter(relaxed_structure_file, n_nodes):
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("relaxed_emitter.txt", "w") as e:
         e.write("ASCII {} 0 0\n".format(n_nodes))

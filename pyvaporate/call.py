@@ -69,7 +69,7 @@ def assign_labels_and_unique_ids(id_dict):
         m.write(m_lines[0])
         for line in m_lines[1:]:
             sl = line.split()
-            sl[4] = str(i)
+#            sl[4] = str(i)
             m.write("	".join(sl))
             m.write("\n")
             i += 1

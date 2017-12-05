@@ -63,7 +63,7 @@ elements:
       6: auto
 emitter:
   orientation:
-    z: (1, 1, 0)
+    z: [1, 1, 0]
     y: auto
     x: auto
   radius: 100  # In Angstroms
@@ -72,10 +72,14 @@ evaporation:
   total_events: 100%  # total_events can be a percentage or an absolute number
   events_per_step: 10%  # Same goes for events_per_step
 lammps:
-  read_file: none  # Specify the path to a LAMMPS input file to use as a template for all MD relaxations. If not "none", this overrides the other commands in this section.
-  potentials_location: /path/to/your library.meam  # A file in the lammps/potentials directory.
+  read_file: none  # Specify the path to a LAMMPS input file to use as a
+                   # template for all MD relaxations. If not "none", this
+                   # overrides the other commands in this section.
+  potentials_location: /path/to/your/library.meam  # This file is in your
+                                                   # lammps/potentials
+                                                   # directory.
   minimize:
-    etol: 1e-8
+    etol: 1e-8  # LAMMPS minimization parameters.
     ftol: 1e-8
     maxiter: 1000
     maxeval: 1000

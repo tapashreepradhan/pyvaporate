@@ -91,17 +91,11 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     for pt in pts:
         pt = [pt[0], pt[1], pt[2]]
         if (pt[2]<emitter_side_height and (pt[0]-cx)**2+(pt[1]-cy)**2\
-                <emitter_radius**2):
+                <emitter_radius**2) or (pt[0]-cx)**2+(pt[1]-cy)**2+\
+                (pt[2]-emitter_side_height)**2<emitter_radius**2:
             pt = [i*1e-10 for i in pt]
             pt.append(10)  # emitter ID
-            pt.append(number)
-            number += 1
-            emitter_points.append(pt)
-        elif (pt[0]-cx)**2+(pt[1]-cy)**2+(pt[2]-emitter_side_height)**2\
-                <emitter_radius**2:
-            pt = [i*1e-10 for i in pt]
-            pt.append(10)  # emitter ID
-            pt.append(number)
+#            pt.append(number)
             number += 1
             emitter_points.append(pt)
 

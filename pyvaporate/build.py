@@ -26,7 +26,6 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
         else:
             x_axis = tuple(np.cross(z_axis, (0, 1, 0)))
         y_axis = tuple(np.cross(z_axis, x_axis))
-        print(x_axis, y_axis, z_axis)
 
     R = emitter_radius + vacuum_radius
 
@@ -144,7 +143,7 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     with open(filename, "w") as e:
         n_nodes = number
         e.write("ASCII {} 1 0\n".format(n_nodes))
-        for pt in emitter_points + vacuum_points + bottom_points:
+        for pt in emitter_points:  # + vacuum_points + bottom_points:
                 # It's required that the coordinates be
                 # separated by a tab character (^I), not
                 # by regular spaces.
@@ -152,4 +151,4 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
                 e.write("\n")
         comment = ["#"]
         comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
-        e.write("{}\n".format(" ".join(comment)))
+e.write("{}\n".format(" ".join(comment)))

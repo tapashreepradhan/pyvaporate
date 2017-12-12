@@ -4,10 +4,13 @@ import os
 
 from pyvaporate.evaluate import assign_ids_by_cn
 
+from monty.serialization import loadfn
 
-LAMMPS_CMD = os.environ["LAMMPS_CMD"]
-TAPSIM_CMD = os.environ["TAPSIM_BIN"] + "/tapsim"
-MESHGEN_CMD = os.environ["TAPSIM_BIN"] + "/meshgen"
+
+CONFIGURATION = loadfn("")
+LAMMPS_CMD = CONFIGURATION["LAMMPS_CMD"]
+TAPSIM_CMD = CONFIGURATION["TAPSIM_CMD"]
+MESHGEN_CMD = CONFIGURATION["MESHGEN_CMD"]
 MGN_INI_LINES = open("{}/meshgen.ini".format(
     "/".join(__file__.split("/")[:-1]))
 ).readlines()
@@ -207,7 +210,7 @@ def add_original_vacuum_nodes():
         l.split()[3] in ["0", "2"]
     ]
 
-    emitter_lines = open("emitter.txt").readlines()
+    emitter_lines = open("relaxed_emitter.txt").readlines()
     emitter_lines = [
         l for l in emitter_lines[1:-1] if l.split()[3] not in
         ["0", "2"]

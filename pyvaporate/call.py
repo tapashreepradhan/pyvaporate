@@ -7,7 +7,7 @@ from pyvaporate.evaluate import assign_ids_by_cn
 from monty.serialization import loadfn
 
 
-CONFIGURATION = loadfn("")
+CONFIGURATION = loadfn("/u/mashton/pv.yaml")
 LAMMPS_CMD = CONFIGURATION["LAMMPS_CMD"]
 TAPSIM_CMD = CONFIGURATION["TAPSIM_CMD"]
 MESHGEN_CMD = CONFIGURATION["MESHGEN_CMD"]

@@ -6,8 +6,7 @@ import numpy as np
 from random import randint
 
 
-ELTS = {"10": "W"}
-MASSES = {"W": "183.85"}
+IDS = {"W": "10"}
 
 
 def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
@@ -17,8 +16,6 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     Build an emitter (set of nodes, TAPSim style) based on an
     element, basis, orientation, and dimensions.
     """
-
-    IDS = ["10"]
 
     if x_axis == "auto" and y_axis == "auto":
         if 0.99 < np.dot(z_axis, (1, 0, 0)) < 1.01:
@@ -102,14 +99,14 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
         elif (pt[2]<emitter_side_height and (pt[0]-cx)**2+(pt[1]-cy)**2\
                 <emitter_radius**2):
             pt = [i*1e-10 for i in pt]
-            pt.append(10)  # emitter ID
+            pt.append(IDS[element])  # emitter ID
 #            pt.append(number)
             number += 1
             emitter_points.append(pt)
         elif (pt[0]-cx)**2+(pt[1]-cy)**2+(pt[2]-emitter_side_height)**2\
                 <emitter_radius**2:
             pt = [i*1e-10 for i in pt]
-            pt.append(10)  # emitter ID
+            pt.append(IDS[element])  # emitter ID
 #            pt.append(number)
             number += 1
             emitter_points.append(pt)
@@ -126,19 +123,19 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
             number += 1
             vacuum_points.append(pt)
 
-    if alloy:
-        conc = 0.05  # 10%
-        substitution_indices = []
-        num_atoms = len(emitter_points)
-        num_substitution_atoms = math.floor(conc*num_atoms)
-        j = 0
-        while j < num_substitution_atoms:
-            x = randint(0, num_atoms)
-            if x not in substitution_indices:
-                substitution_indices.append(x)
-                j += 1
-        for i in substitution_indices:
-            emitter_points[i][3] = 11
+    # if alloy:
+    #     conc = 0.05  # 10%
+    #     substitution_indices = []
+    #     num_atoms = len(emitter_points)
+    #     num_substitution_atoms = math.floor(conc*num_atoms)
+    #     j = 0
+    #     while j < num_substitution_atoms:
+    #         x = randint(0, num_atoms)
+    #         if x not in substitution_indices:
+    #             substitution_indices.append(x)
+    #             j += 1
+    #     for i in substitution_indices:
+    #         emitter_points[i][3] = 11
 
     with open(filename, "w") as e:
         n_nodes = number
@@ -150,5 +147,5 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
                 e.write("	".join([str(i) for i in pt]))
                 e.write("\n")
         comment = ["#"]
-        comment += ["{}={}".format(ID, ELTS[ID]) for ID in IDS]
+        comment += [" {}={}".format(elt, IDS[elt]) for elt in IDS]
         e.write("{}\n".format(" ".join(comment)))

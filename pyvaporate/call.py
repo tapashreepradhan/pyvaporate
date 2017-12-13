@@ -50,7 +50,7 @@ def call_tapsim(node_file, n_events, id_dict):
                 if "***_SET_NAME_HERE_***" in line:
                     line = line.replace("***_SET_NAME_HERE_***", name)
                 elif "***_SET_MASS_HERE_***" in line:
-                    line = line.replace("***_SET_MASS_HERE_***", MASSES[elt])
+                    line = line.replace("***_SET_MASS_HERE_***", MASSES[BASE_ID])
                 elif "EVAPORATION_CHARGE_STATE" in line:
                     line = line.replace("1", CHARGE_STATES[elt])
                 elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:

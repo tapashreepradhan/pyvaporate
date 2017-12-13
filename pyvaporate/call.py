@@ -177,7 +177,7 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
         dat.write("{} {} zlo zhi\n\n".format(zlim[0], zlim[1]))
         dat.write("Masses\n\n")
         for elt in atom_types:
-            dat.write("{} {}\n".format(atom_types.index(elt)+1, MASSES[elt]))
+            dat.write("{} {}\n".format(elt, MASSES[elt]))
         dat.write("\nAtoms\n\n")
         fixed_indices = []
         for atom in atom_coords:

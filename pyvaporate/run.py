@@ -46,6 +46,6 @@ def yaml_run(config_file):
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
         call_tapsim("emitter.txt", SETUP)
         n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
-        call_lammps(n_atoms)
+        call_lammps(n_atoms, SETUP)
         step_number += 1
         os.chdir("../")

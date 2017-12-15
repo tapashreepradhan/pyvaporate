@@ -25,6 +25,9 @@ def yaml_run(config_file):
     emitter_side_height = SETUP["emitter"]["side_height"]
     elements = [e for e in SETUP["elements"]]
     basis = SETUP["basis"]
+    z_axis = SETUP["emitter"]["orientation"]["z"]
+    y_axis = SETUP["emitter"]["orientation"]["y"]
+    x_axis = SETUP["emitter"]["orientation"]["x"]    
 
     step_number = 0
     while step_number * n_events_per_step < n_events_total:

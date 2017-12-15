@@ -19,6 +19,7 @@ E_FIELDS = {"10": "57.1e-9", "11": "27.1e-9", "12": "37.1e-9", "13": "47.1e-9", 
 MASSES = {"1": "183.85"}
 CHARGE_STATES = {"W": "3"}
 
+
 def call_tapsim(node_file, n_events, id_dict):
     """
     Run the TAPSim program, starting with building a voronoi mesh for
@@ -67,6 +68,7 @@ def call_tapsim(node_file, n_events, id_dict):
         [TAPSIM_CMD, "evaporation", "mesh.cfg", "mesh.txt",
          "--event-limit={}".format(n_events), "--write-ascii"]
     )
+    update_mesh()
 
 
 def assign_labels_and_unique_ids(id_dict):
@@ -114,7 +116,7 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def relax_emitter(n_nodes):
+def call_lammps(n_nodes):
 
     print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms())
@@ -128,7 +130,6 @@ def relax_emitter(n_nodes):
     assign_ids_by_cn("relaxed_emitter.lmp")
     convert_lammps_to_emitter("relaxed_emitter.lmp", n_nodes)
     add_original_vacuum_nodes()
-#    remove_duplicate_nodes("emitter_{}.txt".format(step_number))
 
 
 def find_surface_atoms():
@@ -225,24 +226,6 @@ def add_original_vacuum_nodes():
             e.write(line)
 
 
-def remove_duplicate_nodes(emitter_file):
-    e_lines = open(emitter_file).readlines()
-    original_n_nodes = int(e_lines[0].split()[1])
-    unique_coords, unique_lines = [], []
-    n_duplicates = 0
-    for line in e_lines:
-        sl = line.split()
-        if len(sl) > 2 and " ".join(sl[:3]) not in unique_coords:
-            unique_coords.append(" ".join(sl[:3]))
-            unique_lines.append(line)
-        else:
-            n_duplicates += 1
-    with open(emitter_file, "w") as e:
-        e.write("ASCII {} 0 0\n".format(original_n_nodes-n_duplicates))
-        for line in unique_lines:
-            e.write(line)
-        e.write(e_lines[-1])
-
 def write_lammps_input_file(structure_file):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:
@@ -251,9 +234,9 @@ def write_lammps_input_file(structure_file):
         er.write("pair_style meam/c\n")
         er.write("pair_coeff * * /u/mashton/software/lammps/potentials/library.meam W NULL W\n\n")
         er.write("neighbor 1.0 bin\n")
-        er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
-        er.write("velocity inner set 0 0 0\n")
-        er.write("fix frozen inner setforce 0 0 0\n\n")
+#        er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
+#        er.write("velocity inner set 0 0 0\n")
+#        er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("compute cnum all coord/atom cutoff 3.0\n")
         er.write("dump 1 all custom 1000 cnum.dump c_cnum\n")
         er.write("fix 1 all nve\n")

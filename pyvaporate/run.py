@@ -4,6 +4,8 @@ from pyvaporate.build import build_emitter
 from pyvaporate.call import call_tapsim, call_lammps
 from pyvaporate import SETUP
 
+import os
+
 
 def yaml_run(config_file):
     """

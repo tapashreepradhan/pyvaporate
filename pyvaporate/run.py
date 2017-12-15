@@ -33,10 +33,10 @@ def yaml_run(config_file):
 
     step_number = 0
     if "%" in n_events_total:
-        total_percent = float(n_events_total.replace("%","")/100.)
+        total_percent = float(n_events_total.replace("%",""))/100.
         n_events_total = np.inf
     if "%" in n_events_per_step:
-        step_percent = float(n_events_per_step.replace("%","")/100.)
+        step_percent = float(n_events_per_step.replace("%",""))/100.
         n_events_per_step = 0
     while step_number * n_events_per_step < n_events_total:
         if not os.path.isdir(str(step_number)):

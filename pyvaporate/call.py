@@ -20,7 +20,7 @@ MASSES = {"1": "183.85"}
 CHARGE_STATES = {"W": "3"}
 
 
-def call_tapsim(node_file, n_events, id_dict):
+def call_tapsim(node_file, setup):
     """
     Run the TAPSim program, starting with building a voronoi mesh for
     an emitter (node) file and then running a set number of
@@ -31,10 +31,11 @@ def call_tapsim(node_file, n_events, id_dict):
 
     print("Creating mesh.txt and mesh.cfg")
     _ = subprocess.check_output(
-        [MESHGEN_CMD, node_file, "mesh.txt",
+        [setup["evaporation"]["meshgen_bin"], node_file, "mesh.txt",
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
+    id_dict = {"10": [e for e in setup["elements"]][0]}
     assign_labels_and_unique_ids(id_dict)
 
     sm_lines = open("mesh.cfg").readlines()
@@ -44,20 +45,20 @@ def call_tapsim(node_file, n_events, id_dict):
             if "ID" in line and line.split()[-1] not in ["0", "1", "2", "3"]:
                 ID = line.split()[-1]
                 BASE_ID = str(int(ID) - int(ID[-1]))
-                elt = ELTS[BASE_ID]
+                elt = id_dict[BASE_ID]
                 name = elt+"_"+ID[-1]
                 edit = True
             if edit:
                 if "***_SET_NAME_HERE_***" in line:
                     line = line.replace("***_SET_NAME_HERE_***", name)
                 elif "***_SET_MASS_HERE_***" in line:
-                    line = line.replace("***_SET_MASS_HERE_***", MASSES[BASE_ID[0]])
+                    line = line.replace("***_SET_MASS_HERE_***", setup["elements"][elt]["mass"])
                 elif "EVAPORATION_CHARGE_STATE" in line:
-                    line = line.replace("1", CHARGE_STATES[elt])
+                    line = line.replace("1", setup["elements"][elt]["charge"])
                 elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
                     line = line.replace(
                         "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***",
-                        E_FIELDS[ID]
+                        setup["elements"][elt]["e_fields"][int(ID[-1])]
                     )
                 sm.write(line)
             else:
@@ -65,8 +66,8 @@ def call_tapsim(node_file, n_events, id_dict):
 
     print("Running TAPSim")
     _ = subprocess.check_output(
-        [TAPSIM_CMD, "evaporation", "mesh.cfg", "mesh.txt",
-         "--event-limit={}".format(n_events), "--write-ascii"]
+        [setup["evaporation"]["tapsim_bin"], "evaporation", "mesh.cfg", "mesh.txt",
+         "--event-limit={}".format(setup["evaporation"]["n_events_per_step"]), "--write-ascii"]
     )
     update_mesh()
 
@@ -116,15 +117,15 @@ def write_meshgen_ini():
             mgn.write(line)
 
 
-def call_lammps(n_nodes):
+def call_lammps(n_nodes, setup):
 
     print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms())
     print("Writing LAMMPS input file")
-    write_lammps_input_file("data.emitter")
+    write_lammps_input_file("data.emitter", setup)
 
     print("Running LAMMPS")
-    _ = subprocess.check_output([LAMMPS_CMD, "-l", "log.lammps",
+    _ = subprocess.check_output([setup["lammps"]["bin"], "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     print("Converting LAMMPS structure back to emitter")
     assign_ids_by_cn("relaxed_emitter.lmp")
@@ -226,13 +227,20 @@ def add_original_vacuum_nodes():
             e.write(line)
 
 
-def write_lammps_input_file(structure_file):
+def write_lammps_input_file(structure_file, setup):
+    etol = setup["lammps"]["minimize"]["etol"]
+    ftol = setup["lammps"]["minimize"]["ftol"]
+    maxiter = setup["lammps"]["minimize"]["maxiter"]
+    maxeval = setup["lammps"]["minimize"]["maxeval"]
+    pot = setup["lammps"]["potentials_location"]
+    elt = [e for e in setup["elements"]][0]
+
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
         er.write("units real\natom_style atomic\n\nread_data {}\n\n".format(structure_file))
         er.write("pair_style meam/c\n")
-        er.write("pair_coeff * * /u/mashton/software/lammps/potentials/library.meam W NULL W\n\n")
+        er.write("pair_coeff * * %s %s NULL %s\n\n" % (pot, elt, elt))
         er.write("neighbor 1.0 bin\n")
 #        er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
 #        er.write("velocity inner set 0 0 0\n")
@@ -240,6 +248,6 @@ def write_lammps_input_file(structure_file):
         er.write("compute cnum all coord/atom cutoff 3.0\n")
         er.write("dump 1 all custom 1000 cnum.dump c_cnum\n")
         er.write("fix 1 all nve\n")
-        er.write("minimize 1e-8 1e-8 1000 1000\n")
+        er.write("minimize %s %s %s %s\n" % (etol, ftol, maxiter, maxeval))
         er.write("compute 1 all coord/atom cutoff 4.0\n")
         er.write("write_dump all custom relaxed_emitter.lmp x y z type c_cnum")

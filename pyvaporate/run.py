@@ -45,7 +45,6 @@ def yaml_run(config_file):
         os.chdir(str(step_number))
         print("\nSTEP {}\n------".format(step_number))
         if step_number == 0:
-            os.system("cp ../emitter.txt .")
             print("Building initial emitter")
             build_emitter(
                 element=elements[0], basis=basis, z_axis=z_axis,

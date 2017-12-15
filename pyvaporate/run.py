@@ -6,6 +6,8 @@ from pyvaporate import SETUP
 
 import os
 
+import numpy as np
+
 
 def yaml_run(config_file):
     """
@@ -30,6 +32,12 @@ def yaml_run(config_file):
     x_axis = SETUP["emitter"]["orientation"]["x"]
 
     step_number = 0
+    if "%" in n_events_total:
+        total_percent = float(n_events_total.replace("%","")/100.)
+        n_events_total = np.inf
+    if "%" in n_events_per_step:
+        step_percent = float(n_events_per_step.replace("%","")/100.)
+        n_events_per_step = 0
     while step_number * n_events_per_step < n_events_total:
         if not os.path.isdir(str(step_number)):
             os.mkdir(str(step_number))
@@ -42,6 +50,12 @@ def yaml_run(config_file):
                 filename="emitter.txt", emitter_radius=emitter_radius,
                 emitter_side_height=emitter_side_height
             )
+            n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
+                           l.split()[3] not in ["0", "1", "2", "3"]])
+            if n_events_total == np.inf:
+                n_events_total = total_percent * n_atoms
+            if n_events_per_step == 0:
+                n_events_per_step = step_percent * n_atoms
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
         call_tapsim("emitter.txt", SETUP)

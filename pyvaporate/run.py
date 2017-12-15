@@ -27,7 +27,7 @@ def yaml_run(config_file):
     basis = SETUP["basis"]
     z_axis = SETUP["emitter"]["orientation"]["z"]
     y_axis = SETUP["emitter"]["orientation"]["y"]
-    x_axis = SETUP["emitter"]["orientation"]["x"]    
+    x_axis = SETUP["emitter"]["orientation"]["x"]
 
     step_number = 0
     while step_number * n_events_per_step < n_events_total:
@@ -44,7 +44,7 @@ def yaml_run(config_file):
             )
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
-        call_tapsim("emitter.txt", n_events_per_step, id_dict={"10": elements[0]})
+        call_tapsim("emitter.txt", SETUP)
         n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
         call_lammps(n_atoms)
         step_number += 1

@@ -52,9 +52,9 @@ def call_tapsim(node_file, setup):
                 if "***_SET_NAME_HERE_***" in line:
                     line = line.replace("***_SET_NAME_HERE_***", name)
                 elif "***_SET_MASS_HERE_***" in line:
-                    line = line.replace("***_SET_MASS_HERE_***", setup["elements"][elt]["mass"])
+                    line = line.replace("***_SET_MASS_HERE_***", str(setup["elements"][elt]["mass"]))
                 elif "EVAPORATION_CHARGE_STATE" in line:
-                    line = line.replace("1", setup["elements"][elt]["charge"])
+                    line = line.replace("1", str(setup["elements"][elt]["charge"]))
                 elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
                     line = line.replace(
                         "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***",

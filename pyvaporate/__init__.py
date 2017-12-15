@@ -1,25 +1,26 @@
 SETUP = {
-    "basis": "BCC",
-    "elements": {
-        "W": {
-            "percent_occ": 100,
-            "charge": 3,
-            "mass": 183.85,
-            "e_fields": {
-                0: 57e-9,
-                1: 27e-9,
-                2: 37e-9,
-                3: 47e-9,
-                4: 57e-9,
-                5: 67e-9,
-                6: 77e-9,
-                7: 87e-9,
-                8: 97e-9,
-                9: 107e-9
-            }
-        }
-    },
     "emitter": {
+        "elements": {
+            "W": {
+                "percent_occ": 100,
+                "charge": 3,
+                "mass": 183.85,
+                "e_fields": {
+                    0: 57e-9,
+                    1: 27e-9,
+                    2: 37e-9,
+                    3: 47e-9,
+                    4: 57e-9,
+                    5: 67e-9,
+                    6: 77e-9,
+                    7: 87e-9,
+                    8: 97e-9,
+                    9: 107e-9
+                }
+            }
+        },
+        "file": "none",
+        "basis": "BCC",
         "orientation": {
             "z": [1,1,0], "y": "auto", "x": "auto"
         },

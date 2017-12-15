@@ -67,7 +67,7 @@ def call_tapsim(node_file, setup):
     print("Running TAPSim")
     _ = subprocess.check_output(
         [setup["evaporation"]["tapsim_bin"], "evaporation", "mesh.cfg", "mesh.txt",
-         "--event-limit={}".format(setup["evaporation"]["n_events_per_step"]), "--write-ascii"]
+         "--event-limit={}".format(setup["evaporation"]["events_per_step"]), "--write-ascii"]
     )
     update_mesh()
 

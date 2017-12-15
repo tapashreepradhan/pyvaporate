@@ -35,7 +35,7 @@ def call_tapsim(node_file, setup):
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
-    id_dict = {"10": [e for e in setup["elements"]][0]}
+    id_dict = {"10": [e for e in setup["emitter"]["elements"]][0]}
     assign_labels_and_unique_ids(id_dict)
 
     sm_lines = open("mesh.cfg").readlines()
@@ -52,13 +52,13 @@ def call_tapsim(node_file, setup):
                 if "***_SET_NAME_HERE_***" in line:
                     line = line.replace("***_SET_NAME_HERE_***", name)
                 elif "***_SET_MASS_HERE_***" in line:
-                    line = line.replace("***_SET_MASS_HERE_***", str(setup["elements"][elt]["mass"]))
+                    line = line.replace("***_SET_MASS_HERE_***", str(setup["emitter"]["elements"][elt]["mass"]))
                 elif "EVAPORATION_CHARGE_STATE" in line:
-                    line = line.replace("1", str(setup["elements"][elt]["charge"]))
+                    line = line.replace("1", str(setup["emitter"]["elements"][elt]["charge"]))
                 elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
                     line = line.replace(
                         "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***",
-                        setup["elements"][elt]["e_fields"][int(ID[-1])]
+                        setup["emitter"]["elements"][elt]["e_fields"][int(ID[-1])]
                     )
                 sm.write(line)
             else:
@@ -233,7 +233,7 @@ def write_lammps_input_file(structure_file, setup):
     maxiter = setup["lammps"]["minimize"]["maxiter"]
     maxeval = setup["lammps"]["minimize"]["maxeval"]
     pot = setup["lammps"]["potentials_location"]
-    elt = [e for e in setup["elements"]][0]
+    elt = [e for e in setup["emitter"]["elements"]][0]
 
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:

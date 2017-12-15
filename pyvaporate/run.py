@@ -42,6 +42,7 @@ def yaml_run(config_file):
         print("\nSTEP {}\n------".format(step_number))
         if step_number == 0:
             if SETUP["emitter"]["file"] != "none":
+                print("Importing emitter from {}".format(SETUP["emitter"]["file"]))
                 os.system("cp {} ./emitter.txt".format(SETUP["emitter"]["file"]))
             else:
                 print("Building initial emitter")

@@ -39,12 +39,13 @@ def yaml_run(config_file):
     if "%" in n_events_per_step:
         step_percent = float(n_events_per_step.replace("%",""))/100.
         n_events_per_step = 0
-    while step_number * n_events_per_step < n_events_total:
+    while step_number * SETUP["n_events_per_step"] < SETUP["n_events_total"]:
         if not os.path.isdir(str(step_number)):
             os.mkdir(str(step_number))
         os.chdir(str(step_number))
         print("\nSTEP {}\n------".format(step_number))
         if step_number == 0:
+            os.system("cp ../emitter.txt .")
             print("Building initial emitter")
             build_emitter(
                 element=elements[0], basis=basis, z_axis=z_axis,
@@ -54,9 +55,9 @@ def yaml_run(config_file):
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])
             if n_events_total == np.inf:
-                n_events_total = math.ceil(total_percent * n_atoms)
+                SETUP["n_events_total"] = math.ceil(total_percent * n_atoms)
             if n_events_per_step == 0:
-                n_events_per_step = math.ceil(step_percent * n_atoms)
+                SETUP["n_events_per_step"] = math.ceil(step_percent * n_atoms)
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
         call_tapsim("emitter.txt", SETUP)

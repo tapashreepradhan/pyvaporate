@@ -7,6 +7,7 @@ from pyvaporate import SETUP
 import os
 
 import numpy as np
+import math
 
 
 def yaml_run(config_file):
@@ -53,9 +54,9 @@ def yaml_run(config_file):
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])
             if n_events_total == np.inf:
-                n_events_total = total_percent * n_atoms
+                n_events_total = math.ceil(total_percent * n_atoms)
             if n_events_per_step == 0:
-                n_events_per_step = step_percent * n_atoms
+                n_events_per_step = math.ceil(step_percent * n_atoms)
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
         call_tapsim("emitter.txt", SETUP)

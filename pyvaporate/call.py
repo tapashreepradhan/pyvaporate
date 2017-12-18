@@ -108,7 +108,7 @@ def write_meshgen_ini():
 def call_lammps(n_nodes, setup):
 
     print("Converting emitter to LAMMPS structure")
-    convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms())
+    convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms(), setup)
     print("Writing LAMMPS input file")
     write_lammps_input_file("data.emitter", setup)
 
@@ -134,12 +134,13 @@ def find_surface_atoms():
     return surface_numbers
 
 
-def convert_emitter_to_lammps(emitter_file, surface_numbers):
+def convert_emitter_to_lammps(emitter_file, surface_numbers, setup):
 
     emitter_lines = open(emitter_file).readlines()
     atom_lines = [l for l in emitter_lines[1:-1] if l.split()[-2] not in
                   ["0", "1", "2", "3"]]
     atom_types = [t.split("=")[0][0] for t in emitter_lines[-1].split()[1:]]
+    atom_names = [t.split("=")[1] for t in emitter_lines[-1].split()[1:]]
 
     atom_coords = []
     n = 1
@@ -166,8 +167,10 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers):
         dat.write("{} {} ylo yhi\n".format(ylim[0], ylim[1]))
         dat.write("{} {} zlo zhi\n\n".format(zlim[0], zlim[1]))
         dat.write("Masses\n\n")
-        for elt in atom_types:
-            dat.write("{} {}\n".format(elt, MASSES[elt]))
+        for i in range(len(atom_types)):
+            dat.write("{} {}\n".format(
+                atom_types[i], setup["emitter"][atom_names[i]]["mass"])
+            )
         dat.write("\nAtoms\n\n")
         fixed_indices = []
         for atom in atom_coords:

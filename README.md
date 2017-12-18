@@ -41,7 +41,7 @@ to environment variables called `TAPSIM_CMD` and `MESHGEN_CMD`, respectively.
 # Usage
 ------
 
-Create a `.yaml` file with specifications of the system you wish to evaporate.
+Create a `setup.yaml` file with specifications of the system you wish to evaporate.
 Default values exist for most available fields, but the user should familiarize
 his/herself with these fields anyway. Below is a sample input file with all
 the default values listed:
@@ -87,6 +87,7 @@ lammps:
 
 After the input file is created, PyVaporate can be called simply as
 
-```bash
-$ pyvaporate input.yaml
+```python
+> from pyvaporate.run import yaml_run
+> yaml_run("path/to/your/setup.yaml")
 ```

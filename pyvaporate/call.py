@@ -212,14 +212,14 @@ def write_lammps_input_file(structure_file, setup):
     maxiter = setup["lammps"]["minimize"]["maxiter"]
     maxeval = setup["lammps"]["minimize"]["maxeval"]
     pot = setup["lammps"]["potentials_location"]
-    elt = [e for e in setup["emitter"]["elements"]][0]
+    elts = " ".join(setup["emitter"]["elements"])
 
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
         er.write("units real\natom_style atomic\n\nread_data {}\n\n".format(structure_file))
         er.write("pair_style meam/c\n")
-        er.write("pair_coeff * * %s %s NULL %s\n\n" % (pot, elt, elt))
+        er.write("pair_coeff * * %s %s NULL %s\n\n" % (pot, elts, elts))
         er.write("neighbor 1.0 bin\n")
 #        er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
 #        er.write("velocity inner set 0 0 0\n")

@@ -23,7 +23,11 @@ def call_tapsim(node_file, setup):
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
-    assign_labels_and_unique_ids(setup["id_dict"])
+    with open("mesh.txt", "a") as m:
+        comment = "#"
+        for ID in setup["id_dict"]:
+            comment += " {}={}".format(ID, id_dict[ID])
+        m.write(comment)
 
     sm_lines = open("mesh.cfg").readlines()
     with open("mesh.cfg", "w") as sm:
@@ -58,22 +62,6 @@ def call_tapsim(node_file, setup):
     )
     update_mesh()
 
-
-def assign_labels_and_unique_ids(id_dict):
-    m_lines = open("mesh.txt").readlines()
-    i = 1
-    with open("mesh.txt", "w") as m:
-        m.write(m_lines[0])
-        for line in m_lines[1:]:
-            sl = line.split()
-#            sl[4] = str(i)
-            m.write("	".join(sl))
-            m.write("\n")
-            i += 1
-        comment = "#"
-        for ID in id_dict:
-            comment += " {}={}".format(ID, id_dict[ID])
-        m.write(comment)
 
 def update_mesh():
     """

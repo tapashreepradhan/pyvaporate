@@ -52,7 +52,7 @@ emitter:
     W:
       mass: 183.85
       charge: 3
-      percent_occ: 100  # Element symbol and percent of all sites occupied by that element
+      fract_occ: 1.0  # Fraction of all sites occupied by that element
       e_fields:
         0: 57e-9
         1: 27e-9
@@ -64,28 +64,31 @@ emitter:
         7: 87e-9
         8: 97e-9
         9: 107e-9
-  file: none
+  source:
+    node_file: none
+    uc_file: none
   basis: BCC
   orientation:
     z: [1, 1, 0]
     y: auto
     x: auto
-  radius: 75  # In Angstroms
+  radius: 50  # In Angstroms
   side_height: 25
 evaporation:
-  tapsim_bin: /u/mashton/bin/tapsim
-  meshgen_bin: /u/mashton/bin/meshgen
-  total_events: 100%  # total_events can be a percentage or an absolute number
-  events_per_step: 10%  # Same goes for events_per_step
+  tapsim_bin: ~/bin/tapsim
+  meshgen_bin: ~/bin/meshgen
+  total_events: 10%  # total_events can be a percentage or an absolute number
+  events_per_step: 5%  # Same goes for events_per_step
 lammps:
-  bin: /u/mashton/software/lammps/src/lmp_mpi
+  bin: ~/software/lammps/src/lmp_mpi
   read_file: none  # Specify the path to a LAMMPS input file to use as a
                    # template for all MD relaxations. If not "none", this
                    # overrides the other commands in this section.
-  potentials_location: /u/mashton/software/lammps/potentials/library.meam  # This file is in your
+  potentials_location: ~/software/lammps/potentials/library.meam  # This file is in your
                                                    # lammps/potentials
                                                    # directory.
   minimize:
+    surface_only: true
     etol: 1e-8  # LAMMPS minimization parameters.
     ftol: 1e-8
     maxiter: 1000

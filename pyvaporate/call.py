@@ -169,7 +169,8 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers, setup):
         dat.write("Masses\n\n")
         for i in range(len(atom_types)):
             dat.write("{} {}\n".format(
-                atom_types[i], setup["emitter"][atom_names[i]]["mass"])
+                atom_types[i],
+                setup["emitter"]["elements"][atom_names[i]]["mass"])
             )
         dat.write("\nAtoms\n\n")
         fixed_indices = []

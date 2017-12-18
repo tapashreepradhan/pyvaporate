@@ -1,6 +1,6 @@
 from monty.serialization import loadfn
 
-from pyvaporate.build import build_emitter
+from pyvaporate.build import build_emitter_from_scratch, build_emitter_from_file
 from pyvaporate.call import call_tapsim, call_lammps
 from pyvaporate import SETUP
 
@@ -50,10 +50,7 @@ def yaml_run(config_file):
         os.chdir(str(step_number))
         print("\nSTEP {}\n------".format(step_number))
         if step_number == 0:
-            if SETUP["emitter"]["file"] != "none":
-                print("Importing emitter from {}".format(SETUP["emitter"]["file"]))
-                os.system("cp {} ./emitter.txt".format(SETUP["emitter"]["file"]))
-            else:
+            if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
                 print("Building initial emitter")
                 basis = SETUP["emitter"]["basis"]
                 emitter_radius = SETUP["emitter"]["radius"]
@@ -65,6 +62,23 @@ def yaml_run(config_file):
                     element=elements[0], basis=basis, z_axis=z_axis,
                     filename="emitter.txt", emitter_radius=emitter_radius,
                     emitter_side_height=emitter_side_height, alloy=alloy
+                )
+
+            elif SETUP["emitter"]["source"]["node_file"] != "none":
+                print("Importing emitter from {}".format(SETUP["emitter"]["source"]["node_file"]))
+                os.system("cp {} ./emitter.txt".format(SETUP["emitter"]["source"]["node_file"]))
+
+            elif SETUP["emitter"]["source"]["uc_file"] != "none":
+                print("Building emitter based on {}".format(SETUP["emitter"]["source"]["uc_file"]))
+                emitter_radius = SETUP["emitter"]["radius"]
+                emitter_side_height = SETUP["emitter"]["side_height"]
+                z_axis = SETUP["emitter"]["orientation"]["z"]
+                y_axis = SETUP["emitter"]["orientation"]["y"]
+                x_axis = SETUP["emitter"]["orientation"]["x"]
+                build_emitter_from_file(
+                    SETUP["emitter"]["source"]["uc_file"], z_axis=z_axis,
+                    filename="emitter.txt", emitter_radius=emitter_radius,
+                    emitter_side_height=emitter_side_height
                 )
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])

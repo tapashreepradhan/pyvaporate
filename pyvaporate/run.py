@@ -58,7 +58,7 @@ def yaml_run(config_file):
                 z_axis = SETUP["emitter"]["orientation"]["z"]
                 y_axis = SETUP["emitter"]["orientation"]["y"]
                 x_axis = SETUP["emitter"]["orientation"]["x"]
-                build_emitter(
+                build_emitter_from_scratch(
                     element=elements[0], basis=basis, z_axis=z_axis,
                     filename="emitter.txt", emitter_radius=emitter_radius,
                     emitter_side_height=emitter_side_height, alloy=alloy

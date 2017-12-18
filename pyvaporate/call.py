@@ -36,7 +36,7 @@ def call_tapsim(node_file, setup):
             if "ID" in line and line.split()[-1] not in ["0", "1", "2", "3"]:
                 ID = line.split()[-1]
                 BASE_ID = str(int(ID) - int(ID[-1]))
-                elt = id_dict[BASE_ID]
+                elt = setup["id_dict"][BASE_ID]
                 name = elt+"_"+ID[-1]
                 edit = True
             if edit:

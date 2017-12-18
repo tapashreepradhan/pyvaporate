@@ -1,5 +1,6 @@
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
 from ase.build.supercells import make_supercell
+from ase.io.formats import read as ase_read
 
 import sys
 import math

@@ -26,7 +26,7 @@ def call_tapsim(node_file, setup):
     with open("mesh.txt", "a") as m:
         comment = "#"
         for ID in setup["id_dict"]:
-            comment += " {}={}".format(ID, id_dict[ID])
+            comment += " {}={}".format(ID, setup["id_dict"][ID])
         m.write(comment)
 
     sm_lines = open("mesh.cfg").readlines()

@@ -14,6 +14,8 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
     element, basis, orientation, and dimensions.
     """
 
+    IDS = {element: "10"}
+
     if x_axis == "auto" and y_axis == "auto":
         if 0.99 < np.dot(z_axis, (1, 0, 0)) < 1.01:
             x_axis = tuple(np.cross(z_axis, (1, 0, 0)))
@@ -120,7 +122,6 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
             number += 1
             vacuum_points.append(pt)
 
-    IDS = {element: "10"}
     alloy_id = 20
     substitution_indices = []
     for elt in alloy:

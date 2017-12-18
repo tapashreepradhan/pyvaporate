@@ -23,8 +23,7 @@ def call_tapsim(node_file, setup):
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
-    id_dict = {"10": [e for e in setup["emitter"]["elements"]][0]}
-    assign_labels_and_unique_ids(id_dict)
+    assign_labels_and_unique_ids(setup["id_dict"])
 
     sm_lines = open("mesh.cfg").readlines()
     with open("mesh.cfg", "w") as sm:

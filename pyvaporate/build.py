@@ -1,6 +1,6 @@
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
-from ase.build.supercells import make_supercell
-from ase.io.formats import read as ase_read
+from ase.build import make_supercell
+from ase.io import read as ase_read
 
 import sys
 import math
@@ -176,9 +176,9 @@ def build_emitter_from_file(uc_file, filename="emitter.txt", z_axis=(0,0,1),
         elt_id += 10
 
     supercell_dimensions = (
-        int(math.ceil((2*R)/max([pt[0] for pt in pts])))+1,
-        int(math.ceil((2*R)/max([pt[1] for pt in pts])))+1,
-        int(math.ceil((emitter_side_height+R)/max([pt[2] for pt in pts])))+1
+        (int(math.ceil((2*R)/max([pt[0] for pt in pts])))+1, 0, 0),
+        (0, int(math.ceil((2*R)/max([pt[1] for pt in pts])))+1, 0),
+        (0, 0, int(math.ceil((emitter_side_height+R)/max([pt[2] for pt in pts])))+1)
     )
 
     atoms = make_supercell(atoms, supercell_dimensions)

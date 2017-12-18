@@ -27,6 +27,10 @@ def yaml_run(config_file):
     n_events_per_step = SETUP["evaporation"]["events_per_step"]
 
     elements = [e for e in SETUP["emitter"]["elements"]]
+    alloy = {}
+    if len(elements) > 1:
+        for e in elements[1:]:
+            alloy[e] = SETUP["emitter"]["elements"][e]["fract_occ"]
 
     step_number = 0
     if "%" in n_events_total:
@@ -55,7 +59,7 @@ def yaml_run(config_file):
                 build_emitter(
                     element=elements[0], basis=basis, z_axis=z_axis,
                     filename="emitter.txt", emitter_radius=emitter_radius,
-                    emitter_side_height=emitter_side_height
+                    emitter_side_height=emitter_side_height, alloy=alloy
                 )
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])

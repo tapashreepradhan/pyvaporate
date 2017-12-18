@@ -123,16 +123,18 @@ def build_emitter(element, basis, z_axis, filename="emitter.txt", x_axis="auto",
             vacuum_points.append(pt)
 
     alloy_id = 20
-    substitution_indices = []
+    all_substitution_indices = []
     for elt in alloy:
+        substitution_indices = []
         conc = alloy[elt]
         num_atoms = len(emitter_points)
         num_substitution_atoms = math.floor(conc*num_atoms)
         j = 0
         while j < num_substitution_atoms:
-            x = randint(0, num_atoms)
-            if x not in substitution_indices:
+            x = randint(0, num_atoms-1)
+            if x not in all_substitution_indices:
                 substitution_indices.append(x)
+                all_substitution_indices.append(x)
                 j += 1
         for i in substitution_indices:
             emitter_points[i][3] = alloy_id

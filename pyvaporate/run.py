@@ -28,6 +28,11 @@ def yaml_run(config_file):
 
     elements = [e for e in SETUP["emitter"]["elements"]]
     alloy = {}
+    SETUP["id_dict"] = {}
+    n = 10
+    for e in elements:
+        SETUP["id_dict"][str(n)] = e
+        n += 10
     if len(elements) > 1:
         for e in elements[1:]:
             alloy[e] = SETUP["emitter"]["elements"][e]["fract_occ"]

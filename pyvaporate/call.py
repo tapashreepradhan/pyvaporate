@@ -3,21 +3,9 @@ import subprocess
 import os
 
 from pyvaporate.evaluate import assign_ids_by_cn
+from pyvaporate.mgn import mgn_ini_lines
 
 from monty.serialization import loadfn
-
-
-CONFIGURATION = loadfn("/u/mashton/pv.yaml")
-LAMMPS_CMD = CONFIGURATION["LAMMPS_CMD"]
-TAPSIM_CMD = CONFIGURATION["TAPSIM_CMD"]
-MESHGEN_CMD = CONFIGURATION["MESHGEN_CMD"]
-MGN_INI_LINES = open("{}/meshgen.ini".format(
-    "/".join(__file__.split("/")[:-1]))
-).readlines()
-ELTS = {"10": "W"}
-E_FIELDS = {"10": "57.1e-9", "11": "27.1e-9", "12": "37.1e-9", "13": "47.1e-9", "14": "57.1e-9", "15": "67.1e-9", "16": "77.1e-9", "17": "87.1e-9", "18": "97.1e-9"}
-MASSES = {"1": "183.85"}
-CHARGE_STATES = {"W": "3"}
 
 
 def call_tapsim(node_file, setup):
@@ -113,7 +101,7 @@ def update_mesh():
 
 def write_meshgen_ini():
     with open("meshgen.ini", "w") as mgn:
-        for line in MGN_INI_LINES:
+        for line in mgn_ini_lines:
             mgn.write(line)
 
 

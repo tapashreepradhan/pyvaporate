@@ -51,6 +51,7 @@ his/herself with these fields anyway. Below is a sample input file with all
 the default values listed:
 
 ```yaml
+cleanup: false
 emitter:
   elements:
     W:
@@ -92,7 +93,7 @@ lammps:
                                                    # lammps/potentials
                                                    # directory.
   minimize:
-    surface_only: true
+    surface_only: true  # Only relax surface atoms
     etol: 1e-8  # LAMMPS minimization parameters.
     ftol: 1e-8
     maxiter: 1000

@@ -19,7 +19,9 @@ SETUP = {
                 }
             }
         },
-        "file": "none",
+        "source": {
+            "node_file": "none", "uc_file": "none"
+        },
         "basis": "BCC",
         "orientation": {
             "z": [1,1,0], "y": "auto", "x": "auto"
@@ -35,10 +37,11 @@ SETUP = {
     },
     "lammps": {
         "bin": "~/bin/lmp",
+        "read_file": "none",
         "potentials_location": "~/software/lammps/potentials/library.meam",
-        "input_template": "none",
         "minimize": {
-            "etol": 1e-8, "ftol": 1e-8, "maxiter": 1000, "maxeval": 1000
+            "surface_only": "true", "etol": 1e-8, "ftol": 1e-8,
+            "maxiter": 1000, "maxeval": 1000
         }
     }
 }

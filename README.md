@@ -51,14 +51,14 @@ his/herself with these fields anyway. Below is a sample input file with all
 the default values listed:
 
 ```yaml
-cleanup: false
+cleanup: false  # Set to `true` to delete large files created by TAPsim
 emitter:
   elements:
     W:
       mass: 183.85
       charge: 3
       fract_occ: 1.0  # Fraction of all sites occupied by that element
-      e_fields:
+      e_fields:  # Evaporation fields for atoms of given coordination numbers
         0: 57e-9
         1: 27e-9
         2: 37e-9
@@ -70,33 +70,33 @@ emitter:
         8: 97e-9
         9: 107e-9
   source:
-    node_file: none
-    uc_file: none
+    node_file: none  # If not `none`, read and use an existing node file (specify path to file)
+    uc_file: none  # If not `none`, create node file based on a unit cell in a common structure file format (POSCAR, XYZ, etc.)
   basis: BCC
   orientation:
     z: [1, 1, 0]
-    y: auto
+    y: auto  # Automatically choose an orthogonal set of axes
     x: auto
-  radius: 50  # In Angstroms
-  side_height: 25
+  radius: 50  # Emitter tip radius in Angstroms
+  side_height: 25  # Emitter height before hemispherical tip
 evaporation:
-  tapsim_bin: ~/bin/tapsim
-  meshgen_bin: ~/bin/meshgen
-  total_events: 10%  # total_events can be a percentage or an absolute number
+  tapsim_bin: ~/bin/tapsim  # Path to your tapsim executable
+  meshgen_bin: ~/bin/meshgen  # Path to your meshgen executable
+  total_events: 10%  # total_events can be a percentage or an absolute number of evaporated atoms
   events_per_step: 5%  # Same goes for events_per_step
 lammps:
-  bin: ~/software/lammps/src/lmp_mpi
+  bin: ~/software/lammps/src/lmp_mpi  # Path to your lammps executable
   read_file: none  # Specify the path to a LAMMPS input file to use as a
                    # template for all MD relaxations. If not "none", this
                    # overrides the other commands in this section.
-  potentials_location: ~/software/lammps/potentials/library.meam  # This file is in your
-                                                   # lammps/potentials
-                                                   # directory.
+  potentials_location: ~/software/lammps/potentials/library.meam  # MEAM library file. This file is
+                                                                  # usually in your lammps/potentials
+                                                                  # directory.
   minimize:
-    surface_only: true  # Only relax surface atoms
-    etol: 1e-8  # LAMMPS minimization parameters.
+    surface_only: true  # Only relax top layer of atoms
+    etol: 1e-8  # LAMMPS minimization parameters ...
     ftol: 1e-8
-    maxiter: 1000
+    maxiter: 1000  # Set to 1 to evaporate in "static" mode
     maxeval: 1000
 ```
 

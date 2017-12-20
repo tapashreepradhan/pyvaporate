@@ -38,10 +38,10 @@ def yaml_run(config_file):
             alloy[e] = SETUP["emitter"]["elements"][e]["fract_occ"]
 
     step_number = 0
-    if "%" in n_events_total:
+    if "%" in str(n_events_total):
         total_percent = float(n_events_total.replace("%",""))/100.
         n_events_total = np.inf
-    if "%" in n_events_per_step:
+    if "%" in str(n_events_per_step):
         step_percent = float(n_events_per_step.replace("%",""))/100.
         n_events_per_step = 0
     while step_number * SETUP["evaporation"]["events_per_step"] < SETUP["evaporation"]["total_events"]:

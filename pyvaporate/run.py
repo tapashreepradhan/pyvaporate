@@ -91,7 +91,7 @@ def yaml_run(config_file):
         call_tapsim("emitter.txt", SETUP)
         n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
         call_lammps(n_atoms, SETUP)
-        if setup["cleanup"] == "true":
+        if setup["cleanup"] == True:
             os.system("rm trajectory_data.*")
             os.system("rm dump.*")
             os.system("rm dump")

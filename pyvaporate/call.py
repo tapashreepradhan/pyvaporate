@@ -221,7 +221,7 @@ def write_lammps_input_file(structure_file, setup):
         er.write("pair_style meam/c\n")
         er.write("pair_coeff * * %s %s NULL %s\n\n" % (pot, elts, elts))
         er.write("neighbor 1.0 bin\n")
-        if setup["lammps"]["minimize"]["surface_only"].lower() == "true":
+        if setup["lammps"]["minimize"]["surface_only"] == True:
             er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))
             er.write("velocity inner set 0 0 0\n")
             er.write("fix frozen inner setforce 0 0 0\n\n")

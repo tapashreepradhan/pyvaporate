@@ -6,6 +6,7 @@ SETUP = {
                 "percent_occ": 100,
                 "charge": 3,
                 "mass": 183.85,
+                "radius": 1.9,
                 "e_fields": {
                     0: 57e-9,
                     1: 27e-9,

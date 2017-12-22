@@ -229,5 +229,5 @@ def write_lammps_input_file(structure_file, setup):
         er.write("dump 1 all custom 1000 cnum.dump c_cnum\n")
         er.write("fix 1 all nve\n")
         er.write("minimize %s %s %s %s\n" % (etol, ftol, maxiter, maxeval))
-        er.write("compute 1 all coord/atom cutoff 4.0\n")
+        er.write("compute 1 all coord/atom cutoff 3.0\n")
         er.write("write_dump all custom relaxed_emitter.lmp x y z type c_cnum")

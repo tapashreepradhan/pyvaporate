@@ -1,4 +1,5 @@
 SETUP = {
+    "cleanup": False,
     "emitter": {
         "elements": {
             "W": {

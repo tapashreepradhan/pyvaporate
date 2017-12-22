@@ -26,8 +26,8 @@ $ make yes-user-meamc
 $ make mpi
 ```
 
-Export the location of the create LAMMPS executable (`lmp_mpi`) to an
-environment variable called `LAMMPS_CMD`.
+Note the location of the LAMMPS executable (`lmp_mpi`), since you will need this
+to run Pyvaporate (see the setup file below).
 
 ## TAPSim Installation
 
@@ -39,8 +39,8 @@ $ cd tapsim_v1.0b_r3225/
 $ make
 ```
 
-Export the location of the `tapsim` and `meshgen` binaries created in `./bin`
-to environment variables called `TAPSIM_CMD` and `MESHGEN_CMD`, respectively.
+Again, note the location of the `tapsim` and `meshgen` binaries created in
+`tapsim_v1.0b_r3225/bin` so you can use them in your setup files for Pyvaporate.
 
 # Usage
 ------
@@ -100,9 +100,11 @@ lammps:
     maxeval: 1000
 ```
 
-After the input file is created, PyVaporate can be called simply as
+After the input file is created, PyVaporate can be called simply by running
 
 ```python
 > from pyvaporate.run import yaml_run
 > yaml_run("path/to/your/setup.yaml")
 ```
+
+in Python.

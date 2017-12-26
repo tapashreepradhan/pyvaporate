@@ -44,7 +44,7 @@ def yaml_run(config_file):
     if "%" in str(n_events_per_step):
         step_percent = float(n_events_per_step.replace("%",""))/100.
         n_events_per_step = 0
-    while step_number * SETUP["evaporation"]["events_per_step"] < SETUP["evaporation"]["total_events"]:
+    while step_number * SETUP["evaporation"]["events_per_step"] <= SETUP["evaporation"]["total_events"]:
         if not os.path.isdir(str(step_number)):
             os.mkdir(str(step_number))
         os.chdir(str(step_number))
@@ -86,16 +86,17 @@ def yaml_run(config_file):
                 SETUP["evaporation"]["total_events"] = math.ceil(total_percent * n_atoms)
             if n_events_per_step == 0:
                 SETUP["evaporation"]["events_per_step"] = math.ceil(step_percent * n_atoms)
+            call_lammps(n_atoms, SETUP)
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
-        call_tapsim("emitter.txt", SETUP)
-        n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
-        call_lammps(n_atoms, SETUP)
-        if SETUP["cleanup"] == True:
-            os.system("rm trajectory_data.*")
-            os.system("rm dump.*")
-            os.system("rm dump")
-            os.system("rm geometry.dat")
+            call_tapsim("emitter.txt", SETUP)
+            n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
+            call_lammps(n_atoms, SETUP)
+            if SETUP["cleanup"] == True:
+                os.system("rm trajectory_data.*")
+                os.system("rm dump.*")
+                os.system("rm dump")
+                os.system("rm geometry.dat")
 
         step_number += 1
         os.chdir("../")

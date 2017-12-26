@@ -109,15 +109,19 @@ def call_lammps(n_nodes, setup):
 
 
 def find_surface_atoms():
-    surface_file = [f for f in os.listdir(os.getcwd()) if "surface_data" in f][-1]
-    surface_lines = open(surface_file).readlines()
-    surface_numbers = []
-    for line in surface_lines[5:]:
-        split_line = line.split()
-        if len(split_line) == 0:
-            break
-        elif split_line[1] == "10":
-            surface_numbers.append(split_line[0])
+    surface_files = [f for f in os.listdir(os.getcwd()) if "surface_data" in f]
+    if len(surface_files):
+        surface_file = surface_files[-1]
+        surface_lines = open(surface_file).readlines()
+        surface_numbers = []
+        for line in surface_lines[5:]:
+            split_line = line.split()
+            if len(split_line) == 0:
+                break
+            elif split_line[1] == "10":
+                surface_numbers.append(split_line[0])
+    else:
+        surface_numbers = []
     return surface_numbers
 
 

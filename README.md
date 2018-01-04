@@ -9,9 +9,9 @@ Pyvaporate enables the simulated evaporation of
 atom-probe tips. It uses a monte carlo approach for evaporation events
 (TAPsim), interrupted by molecular dynamics relaxations (LAMMPS) at specified
 intervals to allow for simulated temperature and surface migration. Evaporation
-fields for each atom in the emitter are dynamically updated based on their
-coordination numbers to allow the assignment of site-specific evaporation
-fields.
+fields for each atom in the emitter are updated after each relaxation interval
+based on their coordination numbers to allow the dynamic assignment of
+site-specific evaporation fields.
 
 # Installation
 ------

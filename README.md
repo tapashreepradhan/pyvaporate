@@ -6,11 +6,12 @@
 </p>
 
 Pyvaporate is a python package that allows the simulated evaporation of
-atom-probe tips. It combines a monte carlo approach for evaporation events
-(TAPsim) with molecular dynamics relaxations at specified intervals to allow
-for simulated temperature and surface migration. Evaporation fields for each
-atom in the emitter are dynamically updated based on that atom's coordination
-number to allow the assignment of site-specific evaporation fields.
+atom-probe tips. It uses a monte carlo approach for evaporation events
+(TAPsim), interrupted by molecular dynamics relaxations (LAMMPS) at specified
+intervals to allow for simulated temperature and surface migration. Evaporation
+fields for each atom in the emitter are dynamically updated based on their
+coordination numbers to allow the assignment of site-specific evaporation
+fields.
 
 # Installation
 ------

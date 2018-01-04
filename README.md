@@ -5,7 +5,7 @@
   A Python Package for simulating full-scale (DFT-MD-MC) field evaporation.
 </p>
 
-Pyvaporate is a python package that allows the simulated evaporation of
+Pyvaporate enables the simulated evaporation of
 atom-probe tips. It uses a monte carlo approach for evaporation events
 (TAPsim), interrupted by molecular dynamics relaxations (LAMMPS) at specified
 intervals to allow for simulated temperature and surface migration. Evaporation

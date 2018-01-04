@@ -86,6 +86,14 @@ def yaml_run(config_file):
                 SETUP["evaporation"]["total_events"] = math.ceil(total_percent * n_atoms)
             if n_events_per_step == 0:
                 SETUP["evaporation"]["events_per_step"] = math.ceil(step_percent * n_atoms)
+            lines = open("emitter.txt").readlines()
+            with open("updated_mesh.txt", "w") as f:
+                f.write(lines[0])
+                for l in lines[1:-1]:
+                    split_line = l.split()
+                    split_line.append("0\n")
+                    f.write(" ".join(split_line))
+                f.write(lines[-1])
             call_lammps(n_atoms, SETUP)
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))

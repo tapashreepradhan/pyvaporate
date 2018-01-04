@@ -148,7 +148,7 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
                 e.write("	".join([str(i) for i in pt]))
                 e.write("\n")
         comment = ["#"]
-        comment += [" {}={}".format(elt, IDS[elt]) for elt in IDS]
+        comment += [" {}={}".format(IDS[elt], elt) for elt in IDS]
         e.write("{}\n".format(" ".join(comment)))
 
 
@@ -232,5 +232,5 @@ def build_emitter_from_file(uc_file, filename="emitter.txt", z_axis=(0,0,1),
                 e.write("	".join([str(i) for i in pt]))
                 e.write("\n")
         comment = ["#"]
-        comment += [" {}={}".format(elt, IDS[elt]) for elt in IDS]
+        comment += [" {}={}".format(IDS[elt], elt) for elt in IDS]
         e.write("{}\n".format(" ".join(comment)))

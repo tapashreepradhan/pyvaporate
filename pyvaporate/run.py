@@ -5,6 +5,8 @@ from pyvaporate.call import call_tapsim, call_lammps
 from pyvaporate import SETUP
 
 import os
+import sys
+sys.stdout = open("pyvaporate.log", "w")
 
 import numpy as np
 import math

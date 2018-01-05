@@ -114,10 +114,12 @@ def yaml_run(config_file):
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
             with redirected(stdout="../pyvaporate.log"):
-                call_tapsim("emitter.txt", SETUP)
+                print("Running TAPSim")
+            call_tapsim("emitter.txt", SETUP)
             n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
             with redirected(stdout="../pyvaporate.log"):
-                call_lammps(n_atoms, SETUP)
+                print("Running LAMMPS")
+            call_lammps(n_atoms, SETUP)
             if SETUP["cleanup"] == True:
                 os.system("rm trajectory_data.*")
                 os.system("rm dump.*")

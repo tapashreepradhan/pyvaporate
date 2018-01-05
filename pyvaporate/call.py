@@ -63,6 +63,7 @@ def call_tapsim(node_file, setup):
 
 def update_mesh():
     """
+    Remove evaporated nodes from the TAPSim mesh.
     """
     emitter_lines = open("mesh.txt").readlines()
     results_lines = open("results_data.00000001").readlines()
@@ -85,12 +86,22 @@ def update_mesh():
 
 
 def write_meshgen_ini():
+    """
+    Write the default meshgen.ini file so that
+    meshgen doesn't ask for it mid-run and
+    interrupt the python process.
+    """
     with open("meshgen.ini", "w") as mgn:
         for line in mgn_ini_lines:
             mgn.write(line)
 
 
 def call_lammps(n_nodes, setup):
+    """
+    Convert a TAPSim emitter node file to a LAMMPS
+    structure (Only the actual atoms, not the vacumu nodes,
+    etc) and then make a call to LAMMPS to relax it.
+    """
 
     convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms(), setup)
     write_lammps_input_file("data.emitter", setup)
@@ -103,6 +114,14 @@ def call_lammps(n_nodes, setup):
 
 
 def find_surface_atoms():
+    """
+    Read from the TAPSim-generated surface_data file
+    which atoms are at the emitter's surface. This is
+    convenient if these are the only atoms you want to
+    allow to relax in LAMMPS (surface_only: true in your
+    setup.yaml) to speed up the relaxation.
+    """
+
     surface_files = [f for f in os.listdir(os.getcwd()) if "surface_data" in f]
     if len(surface_files):
         surface_file = surface_files[-1]
@@ -120,6 +139,10 @@ def find_surface_atoms():
 
 
 def convert_emitter_to_lammps(emitter_file, surface_numbers, setup):
+    """
+    Convert a TAPSim emitter node file to a LAMMPS
+    structure file.
+    """
 
     emitter_lines = open(emitter_file).readlines()
     atom_lines = [l for l in emitter_lines[1:-1] if l.split()[-2] not in
@@ -169,6 +192,11 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers, setup):
 
 
 def convert_lammps_to_emitter(relaxed_structure_file, n_nodes):
+    """
+    Convert a relaxed LAMMPS structure file back to
+    a TAPSim emitter node file.
+    """
+
     xyz_lines = open(relaxed_structure_file).readlines()
     with open("relaxed_emitter.txt", "w") as e:
         e.write("ASCII {} 0 0\n".format(n_nodes))
@@ -185,6 +213,11 @@ def convert_lammps_to_emitter(relaxed_structure_file, n_nodes):
 
 
 def add_original_vacuum_nodes():
+    """
+    Add the vaccuum, etc. nodes back to a TAPSim
+    emitter node file created from a LAMMPS structure,
+    which neither needs nor has these nodes.
+    """
     original_emitter_lines = open("../0/emitter.txt").readlines()
     original_vacuum_lines = [
         l for l in original_emitter_lines[1:] if l[0] == "#" or
@@ -205,6 +238,11 @@ def add_original_vacuum_nodes():
 
 
 def write_lammps_input_file(structure_file, setup):
+    """
+    Write the input file specifying the type
+    of relaxation to perform in LAMMPS.
+    """
+
     etol = setup["lammps"]["minimize"]["etol"]
     ftol = setup["lammps"]["minimize"]["ftol"]
     maxiter = setup["lammps"]["minimize"]["maxiter"]

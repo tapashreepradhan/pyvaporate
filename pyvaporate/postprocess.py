@@ -7,6 +7,12 @@ import matplotlib.pyplot as plt
 
 def plot_detector_hits(filename="detector_hits.png", xlim=(-0.15, 0.15),
                        ylim=(-0.15, 0.15)):
+    """
+    Create a detector hit map by aggregating
+    detector hits from each interval step of the
+    Pyvaporate run. `xlim` and `ylim` should be set to
+    roughly +- the radius of your emitter.
+    """
     results_files = []
     dirs = [d for d in os.listdir(os.getcwd()) if os.path.isdir(d)]
     for d in dirs:

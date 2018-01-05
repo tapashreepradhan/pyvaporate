@@ -2,7 +2,6 @@ from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
 from ase.build import make_supercell
 from ase.io import read as ase_read
 
-import sys
 import math
 import numpy as np
 from random import randint

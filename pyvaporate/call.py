@@ -1,8 +1,6 @@
 import subprocess
 
 import os
-import sys
-sys.stdout = open("pyvaporate.log", "a")
 
 from pyvaporate.evaluate import assign_ids_by_cn
 from pyvaporate.mgn import mgn_ini_lines

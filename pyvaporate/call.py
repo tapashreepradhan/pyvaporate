@@ -17,7 +17,6 @@ def call_tapsim(node_file, setup):
 
     write_meshgen_ini()
 
-    print("Creating mesh.txt and mesh.cfg")
     _ = subprocess.check_output(
         [setup["evaporation"]["meshgen_bin"], node_file, "mesh.txt",
          "--create-config-template=mesh.cfg", "--write-ascii"]
@@ -55,7 +54,6 @@ def call_tapsim(node_file, setup):
             else:
                 sm.write(line)
 
-    print("Running TAPSim")
     _ = subprocess.check_output(
         [setup["evaporation"]["tapsim_bin"], "evaporation", "mesh.cfg", "mesh.txt",
          "--event-limit={}".format(setup["evaporation"]["events_per_step"]), "--write-ascii"]
@@ -94,15 +92,11 @@ def write_meshgen_ini():
 
 def call_lammps(n_nodes, setup):
 
-    print("Converting emitter to LAMMPS structure")
     convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms(), setup)
-    print("Writing LAMMPS input file")
     write_lammps_input_file("data.emitter", setup)
 
-    print("Running LAMMPS")
     _ = subprocess.check_output([setup["lammps"]["bin"], "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
-    print("Converting LAMMPS structure back to emitter")
     assign_ids_by_cn("relaxed_emitter.lmp")
     convert_lammps_to_emitter("relaxed_emitter.lmp", n_nodes)
     add_original_vacuum_nodes()

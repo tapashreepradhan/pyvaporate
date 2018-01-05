@@ -103,13 +103,13 @@ def call_lammps(n_nodes, setup):
     etc) and then make a call to LAMMPS to relax it.
     """
 
-    convert_emitter_to_lammps("updated_mesh.txt", find_surface_atoms(), setup)
-    write_lammps_input_file("data.emitter", setup)
+    convert_emitter_to_lammps(find_surface_atoms(), setup)
+    write_lammps_input_file(setup)
 
     _ = subprocess.check_output([setup["lammps"]["bin"], "-l", "log.lammps",
                                  "-i", "in.emitter_relax"])
     assign_ids_by_cn("relaxed_emitter.lmp")
-    convert_lammps_to_emitter("relaxed_emitter.lmp", n_nodes)
+    convert_lammps_to_emitter(n_nodes)
     add_original_vacuum_nodes()
 
 
@@ -138,13 +138,13 @@ def find_surface_atoms():
     return surface_numbers
 
 
-def convert_emitter_to_lammps(emitter_file, surface_numbers, setup):
+def convert_emitter_to_lammps(surface_numbers, setup):
     """
     Convert a TAPSim emitter node file to a LAMMPS
     structure file.
     """
 
-    emitter_lines = open(emitter_file).readlines()
+    emitter_lines = open("updated_mesh.txt").readlines()
     atom_lines = [l for l in emitter_lines[1:-1] if l.split()[-2] not in
                   ["0", "1", "2", "3"]]
     atom_types = [t.split("=")[0][0] for t in emitter_lines[-1].split()[1:]]
@@ -191,13 +191,13 @@ def convert_emitter_to_lammps(emitter_file, surface_numbers, setup):
             fi.write("{}\n".format(index))
 
 
-def convert_lammps_to_emitter(relaxed_structure_file, n_nodes):
+def convert_lammps_to_emitter(n_nodes):
     """
     Convert a relaxed LAMMPS structure file back to
     a TAPSim emitter node file.
     """
 
-    xyz_lines = open(relaxed_structure_file).readlines()
+    xyz_lines = open("relaxed_structure.lmp").readlines()
     with open("relaxed_emitter.txt", "w") as e:
         e.write("ASCII {} 0 0\n".format(n_nodes))
         i = 1
@@ -237,7 +237,7 @@ def add_original_vacuum_nodes():
             e.write(line)
 
 
-def write_lammps_input_file(structure_file, setup):
+def write_lammps_input_file(setup):
     """
     Write the input file specifying the type
     of relaxation to perform in LAMMPS.
@@ -253,7 +253,7 @@ def write_lammps_input_file(structure_file, setup):
     fixed_indices = [l.replace("\n", "") for l in open("fixed_indices.txt").readlines()]
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
-        er.write("units real\natom_style atomic\n\nread_data {}\n\n".format(structure_file))
+        er.write("units real\natom_style atomic\n\nread_data data.emitter\n\n")
         er.write("pair_style meam/c\n")
         er.write("pair_coeff * * %s %s NULL %s\n\n" % (pot, elts, elts))
         er.write("neighbor 1.0 bin\n")

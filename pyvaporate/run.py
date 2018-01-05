@@ -15,7 +15,7 @@ import math
 @contextmanager
 def redirected(stdout):
     saved_stdout = sys.stdout
-    sys.stdout = open(stdout, 'w')
+    sys.stdout = open(stdout, 'a')
     yield
     sys.stdout = saved_stdout
 
@@ -28,7 +28,8 @@ def yaml_run(config_file):
     for key in SETUP:
         if key in CONFIGURATION:
             SETUP[key] = CONFIGURATION[key]
-
+    with open("pyvaporate.log", "w") as log:
+        log.write("")
     lammps = SETUP["lammps"]["bin"]
 
     tapsim = SETUP["evaporation"]["meshgen_bin"]
@@ -58,10 +59,12 @@ def yaml_run(config_file):
         if not os.path.isdir(str(step_number)):
             os.mkdir(str(step_number))
         os.chdir(str(step_number))
-        print("\nSTEP {}\n------".format(step_number))
+        with redirected(stdout="../pyvaporate.log"):
+            print("\nSTEP {}\n------".format(step_number))
         if step_number == 0:
             if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
-                print("Building initial emitter")
+                with redirected(stdout="../pyvaporate.log"):
+                    print("Building initial emitter")
                 basis = SETUP["emitter"]["basis"]
                 emitter_radius = SETUP["emitter"]["radius"]
                 emitter_side_height = SETUP["emitter"]["side_height"]
@@ -75,11 +78,13 @@ def yaml_run(config_file):
                 )
 
             elif SETUP["emitter"]["source"]["node_file"] != "none":
-                print("Importing emitter from {}".format(SETUP["emitter"]["source"]["node_file"]))
+                with redirected(stdout="pyvaporate.log"):
+                    print("Importing emitter from {}".format(SETUP["emitter"]["source"]["node_file"]))
                 os.system("cp {} ./emitter.txt".format(SETUP["emitter"]["source"]["node_file"]))
 
             elif SETUP["emitter"]["source"]["uc_file"] != "none":
-                print("Building emitter based on {}".format(SETUP["emitter"]["source"]["uc_file"]))
+                with redirected(stdout="../pyvaporate.log"):
+                    print("Building emitter based on {}".format(SETUP["emitter"]["source"]["uc_file"]))
                 emitter_radius = SETUP["emitter"]["radius"]
                 emitter_side_height = SETUP["emitter"]["side_height"]
                 z_axis = SETUP["emitter"]["orientation"]["z"]
@@ -104,12 +109,15 @@ def yaml_run(config_file):
                     split_line.append("0\n")
                     f.write(" ".join(split_line))
                 f.write(lines[-1])
-            call_lammps(n_atoms, SETUP)
+            with redirected(stdout="../pyvaporate.log"):
+                call_lammps(n_atoms, SETUP)
         else:
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
-            call_tapsim("emitter.txt", SETUP)
+            with redirected(stdout="../pyvaporate.log"):
+                call_tapsim("emitter.txt", SETUP)
             n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
-            call_lammps(n_atoms, SETUP)
+            with redirected(stdout="../pyvaporate.log"):
+                call_lammps(n_atoms, SETUP)
             if SETUP["cleanup"] == True:
                 os.system("rm trajectory_data.*")
                 os.system("rm dump.*")

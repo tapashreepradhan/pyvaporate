@@ -128,3 +128,5 @@ def yaml_run(config_file):
 
         step_number += 1
         os.chdir("../")
+    with redirected(stdout="pyvaporate.log"):
+        print("\n------\nEvaporation complete.")

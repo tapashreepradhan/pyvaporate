@@ -1,4 +1,6 @@
 import os
+import sys
+sys.stdout = open("pyvaporate.log", "a")
 
 import matplotlib
 matplotlib.use("Agg")

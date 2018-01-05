@@ -59,8 +59,6 @@ def yaml_run(config_file):
         if not os.path.isdir(str(step_number)):
             os.mkdir(str(step_number))
         os.chdir(str(step_number))
-        with redirected(stdout="../pyvaporate.log"):
-            print("\nSTEP {}\n------".format(step_number))
         if step_number == 0:
             if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
                 with redirected(stdout="../pyvaporate.log"):
@@ -112,6 +110,8 @@ def yaml_run(config_file):
             with redirected(stdout="../pyvaporate.log"):
                 call_lammps(n_atoms, SETUP)
         else:
+            with redirected(stdout="../pyvaporate.log"):
+                print("\nSTEP {}\n------".format(step_number))
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
             with redirected(stdout="../pyvaporate.log"):
                 print("Running TAPSim")

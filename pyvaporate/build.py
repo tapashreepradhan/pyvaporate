@@ -154,7 +154,11 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
 def build_emitter_from_file(uc_file, filename="emitter.txt", z_axis=(0,0,1),
                             x_axis="auto", y_axis="auto", emitter_radius=100,
                             emitter_side_height=50, vacuum_radius=25):
-
+    """
+    Build an emitter (set of nodes, TAPSim style) based on a
+    unit cell structure file (`uc_file`). Any file format
+    supported by ASE can be used.
+    """
 
     if x_axis == "auto" and y_axis == "auto":
         if 0.99 < np.dot(z_axis, (1, 0, 0)) < 1.01:

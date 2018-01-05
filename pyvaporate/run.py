@@ -22,6 +22,11 @@ def redirected(stdout):
 
 def yaml_run(config_file):
     """
+    The main wrapper function for calling Pyvaporate
+    based on a yaml input file (`config_file`).
+
+    The stdout is written to pyvaporate.log in the
+    head directory (same location as the yaml file).
     """
 
     CONFIGURATION = loadfn(config_file)

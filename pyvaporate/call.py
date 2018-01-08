@@ -197,7 +197,7 @@ def convert_lammps_to_emitter(n_nodes):
     a TAPSim emitter node file.
     """
 
-    xyz_lines = open("relaxed_structure.lmp").readlines()
+    xyz_lines = open("relaxed_emitter.lmp").readlines()
     with open("relaxed_emitter.txt", "w") as e:
         e.write("ASCII {} 0 0\n".format(n_nodes))
         i = 1

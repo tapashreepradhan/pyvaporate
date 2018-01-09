@@ -213,7 +213,8 @@ def convert_lammps_to_emitter(n_nodes):
             else:
                 e.write("{}\n".format("	".join([x, y, z, atom_type])))
             i += 1
-        print("Lost {} atoms from surface".format(n_lost))
+    print("{} atoms lost from surface".format(n_lost))
+
 
 def add_original_vacuum_nodes():
     """

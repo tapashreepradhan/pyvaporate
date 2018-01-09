@@ -8,12 +8,7 @@ from pyvaporate.mgn import mgn_ini_lines
 from monty.serialization import loadfn
 
 
-def call_tapsim(node_file, setup):
-    """
-    Run the TAPSim program, starting with building a voronoi mesh for
-    an emitter (node) file and then running a set number of
-    evaporation steps before stopping.
-    """
+def call_meshgen():
 
     write_meshgen_ini()
 
@@ -21,6 +16,14 @@ def call_tapsim(node_file, setup):
         [setup["evaporation"]["meshgen_bin"], node_file, "mesh.txt",
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
+
+
+def call_tapsim(node_file, setup):
+    """
+    Run the TAPSim program, starting with building a voronoi mesh for
+    an emitter (node) file and then running a set number of
+    evaporation steps before stopping.
+    """
 
     with open("mesh.txt", "a") as m:
         comment = "#"
@@ -222,7 +225,7 @@ def add_original_vacuum_nodes():
     emitter node file created from a LAMMPS structure,
     which neither needs nor has these nodes.
     """
-    original_emitter_lines = open("../0/emitter.txt").readlines()
+    original_emitter_lines = open("../0/mesh.txt").readlines()
     original_vacuum_lines = [
         l for l in original_emitter_lines[1:] if l[0] == "#" or
         l.split()[3] in ["0", "2"]

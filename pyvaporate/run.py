@@ -100,7 +100,7 @@ def yaml_run(config_file):
                 )
             with redirected(stdout="../pyvaporate.log"):
                 print("Running Meshgen")
-                call_meshgen()
+                call_meshgen(SETUP)
 
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])

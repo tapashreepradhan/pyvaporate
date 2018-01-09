@@ -88,7 +88,7 @@ def write_mesh_cfg(setup):
                 ][0]
                 ID = str(int(e_field)+int(base_id))
                 cfg.write("ID = {}\n".format(ID))
-                cfg.write("NAME = {}\n".format(elt))
+                cfg.write("NAME = {}_{}\n".format(elt, e_field))
                 cfg.write("CHARGE_DENSITY = 0.00000e+00\n")
                 cfg.write("DIELECTRICITY = 1.00000e+00\n")
                 cfg.write("REMOVABLE = 1\n")

@@ -3,7 +3,7 @@ import subprocess
 import os
 
 from pyvaporate.evaluate import assign_ids_by_cn
-from pyvaporate.mgn import mgn_ini_lines
+from pyvaporate.mgn import mgn_ini_lines, mesh_cfg_lines
 
 from monty.serialization import loadfn
 
@@ -17,6 +17,7 @@ def call_meshgen(setup, node_file):
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
+    write_mesh_cfg()
 
 def call_tapsim(setup):
     """
@@ -30,32 +31,6 @@ def call_tapsim(setup):
         for ID in setup["id_dict"]:
             comment += " {}={}".format(ID, setup["id_dict"][ID])
         m.write(comment)
-
-    sm_lines = open("mesh.cfg").readlines()
-    with open("mesh.cfg", "w") as sm:
-        edit = False
-        for line in sm_lines:
-            if "ID" in line and line.split()[-1] not in ["0", "1", "2", "3"]:
-                ID = line.split()[-1]
-                BASE_ID = str(int(ID) - int(ID[-1]))
-                elt = setup["id_dict"][BASE_ID]
-                name = elt+"_"+ID[-1]
-                edit = True
-            if edit:
-                if "***_SET_NAME_HERE_***" in line:
-                    line = line.replace("***_SET_NAME_HERE_***", name)
-                elif "***_SET_MASS_HERE_***" in line:
-                    line = line.replace("***_SET_MASS_HERE_***", str(setup["emitter"]["elements"][elt]["mass"]))
-                elif "EVAPORATION_CHARGE_STATE" in line:
-                    line = line.replace("1", str(setup["emitter"]["elements"][elt]["charge"]))
-                elif "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***" in line:
-                    line = line.replace(
-                        "***_SET_EVAPORATION_FIELD_STRENGTH_HERE_***",
-                        setup["emitter"]["elements"][elt]["e_fields"][int(ID[-1])]
-                    )
-                sm.write(line)
-            else:
-                sm.write(line)
 
     _ = subprocess.check_output(
         [setup["evaporation"]["tapsim_bin"], "evaporation", "mesh.cfg", "mesh.txt",
@@ -97,6 +72,34 @@ def write_meshgen_ini():
     with open("meshgen.ini", "w") as mgn:
         for line in mgn_ini_lines:
             mgn.write(line)
+
+
+def write_mesh_cfg(setup):
+    with open("mesh.cfg", "w") as cfg:
+        for line in mesh_cfg_lines:
+            cfg.write(line)
+        for elt in setup["emitter"]["elements"]:
+            charge = setup["emitter"]["elements"][elt]["charge"]
+            mass = setup["emitter"]["elements"][elt]["mass"]
+            for e_field in setup["emitter"]["elements"][elt]["e_fields"]:
+                cfg.write("\n")
+                f = setup["emitter"]["elements"][elt]["e_fields"][e_field]
+                base_id = [
+                    i for i in setup["id_dict"] if setup["id_dict"][i] == elt
+                ][0]
+                ID = str(int(e_field)+int(base_id))
+                cfg.write("ID = {}\n".format(ID))
+                cfg.write("NAME = {}\n".format(elt))
+                cfg.write("CHARGE_DENSITY = 0.00000e+00\n")
+                cfg.write("DIELECTRICITY = 1.00000e+00\n")
+                cfg.write("REMOVABLE = 1\n")
+                cfg.write("NEUMANN_BOUNDARY = 0\n")
+                cfg.write("DIRICHLET_BOUNDARY = 1\n")
+                cfg.write("POTENTIAL = 1.00000e+03\n")
+                cfg.write("MASS = {}\n".format(mass))
+                cfg.write("EVAPORATION_CHARGE_STATE = {}\n".format(charge))
+                cfg.write("EVAPORATION_FIELD_STRENGTH = {}\n".format(f))
+                cfg.write("EVAPORATION_ACTIVATION_ENERGY = 1.00000e+00\n")
 
 
 def call_lammps(n_nodes, setup):

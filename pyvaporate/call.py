@@ -17,7 +17,7 @@ def call_meshgen(setup, node_file):
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
 
-    write_mesh_cfg()
+    write_mesh_cfg(setup)
 
 def call_tapsim(setup):
     """

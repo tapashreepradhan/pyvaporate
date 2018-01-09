@@ -113,6 +113,7 @@ def yaml_run(config_file):
                     f.write(" ".join(split_line))
                 f.write(lines[-1])
             with redirected(stdout="../pyvaporate.log"):
+                print("Running LAMMPS")
                 call_lammps(n_atoms, SETUP)
         else:
             with redirected(stdout="../pyvaporate.log"):
@@ -124,7 +125,7 @@ def yaml_run(config_file):
             n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
             with redirected(stdout="../pyvaporate.log"):
                 print("Running LAMMPS")
-            call_lammps(n_atoms, SETUP)
+                call_lammps(n_atoms, SETUP)
             if SETUP["cleanup"] == True:
                 os.system("rm trajectory_data.*")
                 os.system("rm dump.*")

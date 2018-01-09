@@ -16,6 +16,11 @@ def call_meshgen(setup, node_file):
         [setup["evaporation"]["meshgen_bin"], node_file, "mesh.txt",
          "--create-config-template=mesh.cfg", "--write-ascii"]
     )
+    with open("mesh.txt", "a") as m:
+        comment = "#"
+        for ID in setup["id_dict"]:
+            comment += " {}={}".format(ID, setup["id_dict"][ID])
+        m.write(comment)
 
     write_mesh_cfg(setup)
 
@@ -25,12 +30,6 @@ def call_tapsim(setup):
     an emitter (node) file and then running a set number of
     evaporation steps before stopping.
     """
-
-    with open("mesh.txt", "a") as m:
-        comment = "#"
-        for ID in setup["id_dict"]:
-            comment += " {}={}".format(ID, setup["id_dict"][ID])
-        m.write(comment)
 
     _ = subprocess.check_output(
         [setup["evaporation"]["tapsim_bin"], "evaporation", "mesh.cfg", "mesh.txt",

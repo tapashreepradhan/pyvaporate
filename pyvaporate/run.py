@@ -1,7 +1,7 @@
 from monty.serialization import loadfn
 
 from pyvaporate.build import build_emitter_from_scratch, build_emitter_from_file
-from pyvaporate.call import call_tapsim, call_lammps
+from pyvaporate.call import call_meshgen, call_tapsim, call_lammps
 from pyvaporate import SETUP
 
 import os
@@ -98,6 +98,10 @@ def yaml_run(config_file):
                     filename="emitter.txt", emitter_radius=emitter_radius,
                     emitter_side_height=emitter_side_height
                 )
+            with redirected(stdout="../pyvaporate.log"):
+                print("Running Meshgen")
+                call_meshgen()
+
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])
             if n_events_total == np.inf:

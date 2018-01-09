@@ -100,7 +100,7 @@ def yaml_run(config_file):
                 )
             with redirected(stdout="../pyvaporate.log"):
                 print("Running Meshgen")
-                call_meshgen(SETUP)
+                call_meshgen(SETUP, "emitter.txt")
 
             n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
                            l.split()[3] not in ["0", "1", "2", "3"]])
@@ -125,7 +125,7 @@ def yaml_run(config_file):
             os.system("cp ../{}/relaxed_emitter.txt emitter.txt".format(step_number-1))
             with redirected(stdout="../pyvaporate.log"):
                 print("Running TAPSim")
-            call_tapsim("emitter.txt", SETUP)
+            call_tapsim(SETUP)
             n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
             with redirected(stdout="../pyvaporate.log"):
                 print("Running LAMMPS")

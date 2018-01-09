@@ -8,7 +8,7 @@ from pyvaporate.mgn import mgn_ini_lines
 from monty.serialization import loadfn
 
 
-def call_meshgen(setup):
+def call_meshgen(setup, node_file):
 
     write_meshgen_ini()
 
@@ -18,7 +18,7 @@ def call_meshgen(setup):
     )
 
 
-def call_tapsim(node_file, setup):
+def call_tapsim(setup):
     """
     Run the TAPSim program, starting with building a voronoi mesh for
     an emitter (node) file and then running a set number of

@@ -117,7 +117,7 @@ def yaml_run(config_file):
                 f.write(lines[-1])
             with redirected(stdout="../pyvaporate.log"):
                 print("Running LAMMPS")
-            call_lammps(n_atoms, SETUP)
+                call_lammps(n_atoms, SETUP)
         else:
             with redirected(stdout="../pyvaporate.log"):
                 print("\nSTEP {}\n------".format(step_number))

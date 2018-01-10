@@ -51,7 +51,7 @@ def update_mesh():
     for line in emitter_lines[1:-1]:
         sl = line.split()
         if str(i) in remove_ids:
-            sl = [sl[0], sl[1], sl[2], "0"]
+            sl = [sl[0], sl[1], sl[2], "0", "0"]
         new_line = "{}\n".format("	".join(sl))
         new_emitter_lines.append(new_line)
         i += 1

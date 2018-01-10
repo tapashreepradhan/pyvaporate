@@ -160,7 +160,7 @@ def convert_emitter_to_lammps(surface_numbers, setup):
     for line in atom_lines:
         split_line = line.split()
         atom_coords.append(
-            [str(n), split_line[-1][0]]+
+            [str(n), split_line[-2][0]]+
             [str(float(x)*1e10) for x in split_line[:3]]
         )
         n += 1

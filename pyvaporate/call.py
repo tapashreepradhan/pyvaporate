@@ -216,7 +216,7 @@ def convert_lammps_to_emitter(n_nodes):
             if atom_type[-1] == "0":
                 n_lost += 1
             else:
-                e.write("{}\n".format("	".join([x, y, z, atom_type])))
+                e.write("{}\n".format("	".join([x, y, z, atom_type, "0"])))
             i += 1
     print("{} atoms lost from surface".format(n_lost))
 

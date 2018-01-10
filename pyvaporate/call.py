@@ -51,7 +51,7 @@ def update_mesh():
     for line in emitter_lines[1:-1]:
         sl = line.split()
         if str(i) in remove_ids:
-            sl = [sl[0], sl[1], sl[2], "0", sl[4]]
+            sl = [sl[0], sl[1], sl[2], "0"]
         new_line = "{}\n".format("	".join(sl))
         new_emitter_lines.append(new_line)
         i += 1
@@ -160,7 +160,7 @@ def convert_emitter_to_lammps(surface_numbers, setup):
     for line in atom_lines:
         split_line = line.split()
         atom_coords.append(
-            [str(n), split_line[-2][0]]+
+            [str(n), split_line[-1][0]]+
             [str(float(x)*1e10) for x in split_line[:3]]
         )
         n += 1

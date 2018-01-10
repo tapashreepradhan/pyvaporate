@@ -127,7 +127,8 @@ def yaml_run(config_file):
             with redirected(stdout="../pyvaporate.log"):
                 print("Running TAPSim")
             call_tapsim(SETUP)
-            n_atoms = int(open("emitter.txt").readlines()[0].split()[1])-n_events_per_step
+            n_atoms = len([l for l in open("mesh.txt").readlines()[1:-1] if
+                           l.split()[3] not in ["0", "1", "2", "3"]])
             with redirected(stdout="../pyvaporate.log"):
                 print("Running LAMMPS")
                 call_lammps(n_atoms, SETUP)

@@ -53,90 +53,96 @@ def yaml_run(config_file):
         for e in elements[1:]:
             alloy[e] = SETUP["emitter"]["elements"][e]["fract_occ"]
 
-    step_number = 0
     if "%" in str(n_events_total):
         total_percent = float(n_events_total.replace("%",""))/100.
-        n_events_total = np.inf
     if "%" in str(n_events_per_step):
         step_percent = float(n_events_per_step.replace("%",""))/100.
-        n_events_per_step = 0
+
+    if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
+        with redirected(stdout="../pyvaporate.log"):
+            print("Building initial emitter")
+        basis = SETUP["emitter"]["basis"]
+        emitter_radius = SETUP["emitter"]["radius"]
+        emitter_side_height = SETUP["emitter"]["side_height"]
+        z_axis = SETUP["emitter"]["orientation"]["z"]
+        y_axis = SETUP["emitter"]["orientation"]["y"]
+        x_axis = SETUP["emitter"]["orientation"]["x"]
+        build_emitter_from_scratch(
+            element=elements[0], basis=basis, z_axis=z_axis,
+            filename="emitter.txt", emitter_radius=emitter_radius,
+            emitter_side_height=emitter_side_height, alloy=alloy
+        )
+
+    if not os.path.isdir("0"):
+        os.mkdir("0")
+    os.chdir("0")
+    elif SETUP["emitter"]["source"]["node_file"] != "none":
+        with redirected(stdout="pyvaporate.log"):
+            print("Importing emitter from {}".format(SETUP["emitter"]["source"]["node_file"]))
+        os.system("cp {} ./emitter.txt".format(SETUP["emitter"]["source"]["node_file"]))
+
+    elif SETUP["emitter"]["source"]["uc_file"] != "none":
+        with redirected(stdout="../pyvaporate.log"):
+            print("Building emitter based on {}".format(SETUP["emitter"]["source"]["uc_file"]))
+        emitter_radius = SETUP["emitter"]["radius"]
+        emitter_side_height = SETUP["emitter"]["side_height"]
+        z_axis = SETUP["emitter"]["orientation"]["z"]
+        y_axis = SETUP["emitter"]["orientation"]["y"]
+        x_axis = SETUP["emitter"]["orientation"]["x"]
+        build_emitter_from_file(
+            SETUP["emitter"]["source"]["uc_file"], z_axis=z_axis,
+            filename="emitter.txt", emitter_radius=emitter_radius,
+            emitter_side_height=emitter_side_height
+        )
+    with redirected(stdout="../pyvaporate.log"):
+        print("Running Meshgen")
+        call_meshgen(SETUP, "emitter.txt")
+    n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
+                   l.split()[3] not in ["0", "1", "2", "3"]])
+
+    if "%" in str(n_events_total):
+        total_percent = float(n_events_total.replace("%",""))/100.
+        SETUP["evaporation"]["total_events"] = math.ceil(total_percent * n_atoms)
+    if "%" in str(n_events_per_step):
+        step_percent = float(n_events_per_step.replace("%",""))/100.
+        SETUP["evaporation"]["events_per_step"] = math.ceil(step_percent * n_atoms)
+
+    lines = open("emitter.txt").readlines()
+    with open("updated_mesh.txt", "w") as f:
+        f.write(lines[0])
+        for l in lines[1:-1]:
+            split_line = l.split()
+            split_line.append("0\n")
+            f.write(" ".join(split_line))
+        f.write(lines[-1])
+    with redirected(stdout="../pyvaporate.log"):
+        print("Running LAMMPS")
+        call_lammps(n_atoms, SETUP)
+    os.chdir("../")
+
+    step_number = 1
     while step_number * SETUP["evaporation"]["events_per_step"] <= SETUP["evaporation"]["total_events"]:
         if not os.path.isdir(str(step_number)):
             os.mkdir(str(step_number))
         os.chdir(str(step_number))
-        if step_number == 0:
-            if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
-                with redirected(stdout="../pyvaporate.log"):
-                    print("Building initial emitter")
-                basis = SETUP["emitter"]["basis"]
-                emitter_radius = SETUP["emitter"]["radius"]
-                emitter_side_height = SETUP["emitter"]["side_height"]
-                z_axis = SETUP["emitter"]["orientation"]["z"]
-                y_axis = SETUP["emitter"]["orientation"]["y"]
-                x_axis = SETUP["emitter"]["orientation"]["x"]
-                build_emitter_from_scratch(
-                    element=elements[0], basis=basis, z_axis=z_axis,
-                    filename="emitter.txt", emitter_radius=emitter_radius,
-                    emitter_side_height=emitter_side_height, alloy=alloy
-                )
+        with redirected(stdout="../pyvaporate.log"):
+            print("\nSTEP {}\n------".format(step_number))
+        os.system("cp ../{}/relaxed_emitter.txt mesh.txt".format(step_number-1))
+        os.system("cp ../0/mesh.cfg .")
 
-            elif SETUP["emitter"]["source"]["node_file"] != "none":
-                with redirected(stdout="pyvaporate.log"):
-                    print("Importing emitter from {}".format(SETUP["emitter"]["source"]["node_file"]))
-                os.system("cp {} ./emitter.txt".format(SETUP["emitter"]["source"]["node_file"]))
-
-            elif SETUP["emitter"]["source"]["uc_file"] != "none":
-                with redirected(stdout="../pyvaporate.log"):
-                    print("Building emitter based on {}".format(SETUP["emitter"]["source"]["uc_file"]))
-                emitter_radius = SETUP["emitter"]["radius"]
-                emitter_side_height = SETUP["emitter"]["side_height"]
-                z_axis = SETUP["emitter"]["orientation"]["z"]
-                y_axis = SETUP["emitter"]["orientation"]["y"]
-                x_axis = SETUP["emitter"]["orientation"]["x"]
-                build_emitter_from_file(
-                    SETUP["emitter"]["source"]["uc_file"], z_axis=z_axis,
-                    filename="emitter.txt", emitter_radius=emitter_radius,
-                    emitter_side_height=emitter_side_height
-                )
-            with redirected(stdout="../pyvaporate.log"):
-                print("Running Meshgen")
-                call_meshgen(SETUP, "emitter.txt")
-            n_atoms = len([l for l in open("emitter.txt").readlines()[1:-1] if
-                           l.split()[3] not in ["0", "1", "2", "3"]])
-            if n_events_total == np.inf:
-                SETUP["evaporation"]["total_events"] = math.ceil(total_percent * n_atoms)
-            if n_events_per_step == 0:
-                SETUP["evaporation"]["events_per_step"] = math.ceil(step_percent * n_atoms)
-            lines = open("emitter.txt").readlines()
-            with open("updated_mesh.txt", "w") as f:
-                f.write(lines[0])
-                for l in lines[1:-1]:
-                    split_line = l.split()
-                    split_line.append("0\n")
-                    f.write(" ".join(split_line))
-                f.write(lines[-1])
-            with redirected(stdout="../pyvaporate.log"):
-                print("Running LAMMPS")
-                call_lammps(n_atoms, SETUP)
-        else:
-            with redirected(stdout="../pyvaporate.log"):
-                print("\nSTEP {}\n------".format(step_number))
-            os.system("cp ../{}/relaxed_emitter.txt mesh.txt".format(step_number-1))
-            os.system("cp ../0/mesh.cfg .")
-
-            with redirected(stdout="../pyvaporate.log"):
-                print("Running TAPSim")
-            call_tapsim(SETUP)
-            n_atoms = len([l for l in open("mesh.txt").readlines()[1:-1] if
-                           l.split()[3] not in ["0", "1", "2", "3"]])
-            with redirected(stdout="../pyvaporate.log"):
-                print("Running LAMMPS")
-                call_lammps(n_atoms, SETUP)
-            if SETUP["cleanup"] == True:
-                os.system("rm trajectory_data.*")
-                os.system("rm dump.*")
-                os.system("rm dump")
-                os.system("rm geometry.dat")
+        with redirected(stdout="../pyvaporate.log"):
+            print("Running TAPSim")
+        call_tapsim(SETUP)
+        n_atoms = len([l for l in open("mesh.txt").readlines()[1:-1] if
+                       l.split()[3] not in ["0", "1", "2", "3"]])
+        with redirected(stdout="../pyvaporate.log"):
+            print("Running LAMMPS")
+            call_lammps(n_atoms, SETUP)
+        if SETUP["cleanup"] == True:
+            os.system("rm trajectory_data.*")
+            os.system("rm dump.*")
+            os.system("rm dump")
+            os.system("rm geometry.dat")
 
         step_number += 1
         os.chdir("../")

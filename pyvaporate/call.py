@@ -43,9 +43,12 @@ def update_mesh():
     Remove evaporated nodes from the TAPSim mesh.
     """
     emitter_lines = open("mesh.txt").readlines()
-    results_lines = open("results_data.00000001").readlines()
-    results_lines = results_lines[results_lines.index("ASCII\n")+1:]
-    remove_ids = [line.split()[2] for line in results_lines]
+    results_files = [f for f in os.listdir(os.getcwd()) if "results_data" in f]
+    remove_ids = []
+    for f in results_files:
+        results_lines = open(f).readlines()
+        results_lines = results_lines[results_lines.index("ASCII\n")+1:]
+        remove_ids += [line.split()[2] for line in results_lines]
     new_emitter_lines = []
     i = 1
     for line in emitter_lines[1:-1]:

@@ -102,6 +102,11 @@ def yaml_run(config_file):
         step_percent = float(n_events_per_step.replace("%",""))/100.
         SETUP["evaporation"]["events_per_step"] = math.ceil(step_percent * n_atoms)
 
+    with redirected(stdout="../pyvaporate.log"):
+        print("n_atoms {}".format(n_atoms))
+        print("total_events {}".format(SETUP["evaporation"]["total_events"]))
+        print("per step {}".format(SETUP["evaporation"]["events_per_step"]))
+
     lines = open("emitter.txt").readlines()
     with open("updated_mesh.txt", "w") as f:
         f.write(lines[0])

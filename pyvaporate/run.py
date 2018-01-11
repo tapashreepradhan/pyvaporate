@@ -53,10 +53,9 @@ def yaml_run(config_file):
         for e in elements[1:]:
             alloy[e] = SETUP["emitter"]["elements"][e]["fract_occ"]
 
-    if "%" in str(n_events_total):
-        total_percent = float(n_events_total.replace("%",""))/100.
-    if "%" in str(n_events_per_step):
-        step_percent = float(n_events_per_step.replace("%",""))/100.
+    if not os.path.isdir("0"):
+        os.mkdir("0")
+    os.chdir("0")
 
     if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
         with redirected(stdout="../pyvaporate.log"):
@@ -72,10 +71,6 @@ def yaml_run(config_file):
             filename="emitter.txt", emitter_radius=emitter_radius,
             emitter_side_height=emitter_side_height, alloy=alloy
         )
-
-    if not os.path.isdir("0"):
-        os.mkdir("0")
-    os.chdir("0")
     elif SETUP["emitter"]["source"]["node_file"] != "none":
         with redirected(stdout="pyvaporate.log"):
             print("Importing emitter from {}".format(SETUP["emitter"]["source"]["node_file"]))

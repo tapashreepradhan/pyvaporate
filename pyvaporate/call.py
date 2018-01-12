@@ -276,7 +276,7 @@ def write_lammps_input_file(setup):
             er.write("fix frozen inner setforce 0 0 0\n\n")
         er.write("compute cnum all coord/atom cutoff 3.0\n")
         er.write("dump 1 all custom 1000 cnum.dump c_cnum\n")
-        er.write("fix 1 all nvt temp %s %s 100.0\n" % temp, temp)
+        er.write("fix 1 all nvt temp %s %s 100.0\n" % (temp, temp))
         er.write("fix 1 all temp/rescale 1 20.0 20.0 1.0 1.0")
         er.write("minimize %s %s %s %s\n" % (etol, ftol, maxiter, maxeval))
         er.write("compute 1 all coord/atom cutoff 3.0\n")

@@ -43,7 +43,7 @@ SETUP = {
         "potentials_location": "~/software/lammps/potentials/library.meam",
         "minimize": {
             "surface_only": "true", "etol": 1e-8, "ftol": 1e-8,
-            "maxiter": 1000, "maxeval": 1000
+            "maxiter": 1000, "maxeval": 1000, "temperature": 50
         }
     }
 }

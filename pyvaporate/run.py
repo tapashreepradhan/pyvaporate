@@ -1,3 +1,11 @@
+# This is the main control script for Pyvaporate. 
+"""
+1. Emitter creation (either from scratch or from a file)
+2. Mesh generation
+3. Sequential field evaporation simulation steps using TAPSim
+4. Relaxation steps using LAMMPS
+5. Iterative stepwise simulation until the emitter is fully evaporated
+"""
 from monty.serialization import loadfn
 
 from pyvaporate.build import build_emitter_from_scratch, build_emitter_from_file
@@ -29,19 +37,21 @@ def yaml_run(config_file):
     head directory (same location as the yaml file).
     """
 
+    # --------- STEP 1: Load the configuration --------- #
     CONFIGURATION = loadfn(config_file)
     for key in SETUP:
         if key in CONFIGURATION:
             SETUP[key] = CONFIGURATION[key]
-    with open("pyvaporate.log", "w") as log:
+    with open("pyvaporate.log", "w") as log: # logging setup
         log.write("")
+    # retriving executable paths    
     lammps = SETUP["lammps"]["bin"]
-
     tapsim = SETUP["evaporation"]["meshgen_bin"]
     meshgen = SETUP["evaporation"]["tapsim_bin"]
     n_events_total = SETUP["evaporation"]["total_events"]
     n_events_per_step = SETUP["evaporation"]["events_per_step"]
 
+    # setting up alloy composition
     elements = [e for e in SETUP["emitter"]["elements"]]
     alloy = {}
     SETUP["id_dict"] = {}
@@ -57,6 +67,7 @@ def yaml_run(config_file):
         os.mkdir("0")
     os.chdir("0")
 
+    # --------- STEP 2: Emitter creation --------- #
     if SETUP["emitter"]["source"]["node_file"] == "none" and SETUP["emitter"]["source"]["uc_file"] == "none":
         with redirected(stdout="../pyvaporate.log"):
             print("Building initial emitter")
@@ -89,6 +100,7 @@ def yaml_run(config_file):
             filename="emitter.txt", emitter_radius=emitter_radius,
             emitter_side_height=emitter_side_height
         )
+    # --------- STEP 3: Mesh Generation --------- #    
     with redirected(stdout="../pyvaporate.log"):
         print("Running Meshgen")
         call_meshgen(SETUP, "emitter.txt")
@@ -110,11 +122,13 @@ def yaml_run(config_file):
             split_line.append("0\n")
             f.write(" ".join(split_line))
         f.write(lines[-1])
+    # --------- STEP 4: LAMMPS Relaxation ------------- #
     with redirected(stdout="../pyvaporate.log"):
         print("Running LAMMPS")
         call_lammps(n_atoms, SETUP)
     os.chdir("../")
 
+    # --------- STEP 5: Main Evaporation Loop --------- #
     step_number = 1
     while step_number * SETUP["evaporation"]["events_per_step"] <= SETUP["evaporation"]["total_events"]:
         if not os.path.isdir(str(step_number)):

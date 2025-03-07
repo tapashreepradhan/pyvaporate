@@ -1,12 +1,19 @@
+# This file is part of the PyVaporate package and is a comprehensive emitter generation script
+# that can be used to generate emitter files for TAPSim simulations.
+
 from ase.lattice.cubic import SimpleCubic, FaceCenteredCubic, BodyCenteredCubic
-from ase.build import make_supercell
-from ase.io import read as ase_read
+# imports predefined cubic crystalstructures from ASE
+from ase.build import make_supercell # tool for expanding unit cells into larger supercells
+from ase.io import read as ase_read # library for reading atomic structure files like .xyz, .cif
 
 import math
 import numpy as np
 from random import randint
 
-
+# Function to generate emitter file from scratch
+# "alloy" = {"element": concentration}
+# "element" = element symbol
+# "concentration" = concentration of element in the alloy
 def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
                                x_axis="auto", y_axis="auto", emitter_radius=100,
                                emitter_side_height=50, vacuum_radius=25,
@@ -14,10 +21,16 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
     """
     Build an emitter (set of nodes, TAPSim style) based on an
     element, basis, orientation, and dimensions.
+    Parameters:
+    alloy = {"element": concentration}, where element = element symbol and 
+                                        concentration = concentration of element in the alloy
+                                        e.g {"Al": 0.5, "Ga": 0.5}
     """
 
     IDS = {element: "10"}
 
+    # if x_axis and y_axis are not specified, they are automatically calculated
+    # to be perpendicular to z_axis using cross products
     if x_axis == "auto" and y_axis == "auto":
         if 0.99 < np.dot(z_axis, (1, 0, 0)) < 1.01:
             x_axis = tuple(np.cross(z_axis, (1, 0, 0)))
@@ -25,21 +38,21 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
             x_axis = tuple(np.cross(z_axis, (0, 1, 0)))
         y_axis = tuple(np.cross(z_axis, x_axis))
 
-    R = emitter_radius + vacuum_radius
+    R = emitter_radius + vacuum_radius # total cylindrical radius
 
-    if basis.lower() == "bcc":
+    if basis.lower() == "bcc": # generate a cubic lattice based on the specified basis
         lattice = BodyCenteredCubic(
-            size=(1, 1, 1),
+            size=(1, 1, 1), # a 1x1x1 unit cell is created first to calculate lattice spacings
             directions=[x_axis, y_axis, z_axis],
             symbol=element
         )
         pts = lattice.get_positions()
-        supercell_dimensions = (
+        supercell_dimensions = ( # supercell expands to fully cover the emitter + vaccum cylinder
             int(math.ceil((2*R)/max([pt[0] for pt in pts])))+1,
             int(math.ceil((2*R)/max([pt[1] for pt in pts])))+1,
             int(math.ceil((emitter_side_height+R)/max([pt[2] for pt in pts])))+1
         )
-        lattice = BodyCenteredCubic(
+        lattice = BodyCenteredCubic( # final supercell
             size=supercell_dimensions,
             directions=[x_axis, y_axis, z_axis],
             symbol=element
@@ -80,11 +93,23 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
         )
 
     pts = lattice.get_positions()
-
+    
+    # center point calculation
+    """
+    finds the central horizontal coordinates and the lowest z-position to shift the structure
+    such that the bottom atoms rest at z = 0
+    """
     cx = np.mean([pt[0] for pt in pts])
     cy = np.mean([pt[1] for pt in pts])
     min_z = min([pt[2] for pt in pts])
 
+    # classification of points into emitter, vacuum, and bottom regions
+    """
+    bottom -> z = 0 plane, ID = 2
+    emitter -> inside cylindrical emitter region, ID = 10 (default) or can vary for alloys
+    vaccum -> inside cylindrical vacuum region, ID = 0
+    all the positions are converted to meters (1e-10) to match TAPSim conventions.
+    """
     emitter_points, vacuum_points, bottom_points = [], [], []
     number = 0
     for pt in pts:
@@ -118,6 +143,11 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
             number += 1
             vacuum_points.append(pt)
 
+    # alloy substitution
+    """
+    randomly substitutes some emitter atoms to form an alloy
+    alloy elements get unique IDs = 20, 30, 40 etc.
+    """
     alloy_id = 20
     all_substitution_indices = []
     for elt in alloy:
@@ -137,6 +167,7 @@ def build_emitter_from_scratch(element, basis, z_axis, filename="emitter.txt",
         IDS[elt] = str(alloy_id)
         alloy_id += 10
 
+    # writing outputfile
     with open(filename, "w") as e:
         n_nodes = number
         e.write("ASCII {} 0 0\n".format(n_nodes))

@@ -1,9 +1,12 @@
-import os
+# This file contains functions for post-processing the results of a Pyvaporate run.
+# Visualization tool designed to generate a detector hit map from the results of a Pyvaporate run.
+# Gives a 2D top-down view of the detector hits - showing where atoms hit the detector surface
+# after being field evaporarted from the emitter tip.
 
+import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
 
 def plot_detector_hits(filename="detector_hits.png", xlim=(-0.15, 0.15),
                        ylim=(-0.15, 0.15)):
@@ -23,6 +26,8 @@ def plot_detector_hits(filename="detector_hits.png", xlim=(-0.15, 0.15),
 
     for f in results_files:
         try:
+            # reads each result file line by line containing information
+            # about a detected atom - its x and y coordinates on the detector
             tapsim_results = open(f).readlines()
             for line in tapsim_results[2:]:
                 split_line = line.split()

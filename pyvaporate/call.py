@@ -1,5 +1,12 @@
+"""
+This python script is essentially the workflow automation script for running TAPSim-LAMMPS simulations.
+Here's the typical workflow of the script:
+- generates a TAPSim emitter mesh from a node file
+- runs field evaporation simulations in TAPSim
+- relax the structure using LAMMPS molecular dynamics
+- convert data between TAPSim and LAMMPS formats
+"""
 import subprocess
-
 import os
 
 from pyvaporate.evaluate import assign_ids_by_cn
@@ -9,7 +16,12 @@ from monty.serialization import loadfn
 
 
 def call_meshgen(setup, node_file):
-
+    """
+    1. Run the `meshgen` script (part of TAPSim) to generate a mesh file from the node file.
+    2. Writes the meshgen.ini (default configuration to avoid interactive prompts)
+    3. Adds a comment to `mesh.txt` listing element IDs and their corresponding names.
+    4. Writes the `mesh.cfg` file with the evaporaton properties.
+    """
     write_meshgen_ini()
 
     _ = subprocess.check_output(
@@ -41,6 +53,10 @@ def call_tapsim(setup):
 def update_mesh():
     """
     Remove evaporated nodes from the TAPSim mesh.
+    1. reads the `mesh.txt` (the current state of the emitter)
+    2. scans the results_data files (TAPSim output), which lists the evaporated atoms
+    3. updates the `mesh.txt` to mark evaporated atoms by setting their type to 0.
+    4. writes an `updated_mesh.txt` file.
     """
     emitter_lines = open("mesh.txt").readlines()
     results_files = [f for f in os.listdir(os.getcwd()) if "results_data" in f]
@@ -77,6 +93,11 @@ def write_meshgen_ini():
 
 
 def write_mesh_cfg(setup):
+    """
+    Writes a `mesh.cfg` file describing the physical 
+    and evaporation properties for each element type.
+    This is what TAPSim uses to determine how atoms evaporate.
+    """
     with open("mesh.cfg", "w") as cfg:
         for line in mesh_cfg_lines:
             cfg.write(line)
@@ -107,8 +128,14 @@ def write_mesh_cfg(setup):
 def call_lammps(n_nodes, setup):
     """
     Convert a TAPSim emitter node file to a LAMMPS
-    structure (Only the actual atoms, not the vacumu nodes,
+    structure (Only the actual atoms, not the vacuum nodes,
     etc) and then make a call to LAMMPS to relax it.
+    1. prepares the emitter (after evaporation) for LAMMPS relaxation
+    2. converts the `updated_mesh.txt` to a LAMMPS data file
+    3. runs LAMMPS to relax the structure
+    4. re-assigns coordination numbers to atoms after relaxation
+    5. converts the relaxed LAMMPS structure back to a TAPSim emitter node file
+    6. adds the vacuum nodes back to the emitter node file
     """
 
     convert_emitter_to_lammps(find_surface_atoms(), setup)

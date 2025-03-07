@@ -2,6 +2,10 @@ def assign_ids_by_cn(lammps_file):
     """
     Assign ID's to distinguish between atoms of various
     coordinations.
+    1. reads a LAMMPS data file -> contains atom positions, types, and CN
+    2. for each atom, modifies the atom type (ID) based on its CN
+    3. atoms with lower CN will have different IDs than atoms with higher CN.
+    helpful to differentiate surface atoms (low CN) from bulk atoms (high CN)
     """
 
     lammps_lines = open(lammps_file).readlines()

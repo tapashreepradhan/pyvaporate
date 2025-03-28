@@ -17,7 +17,7 @@ emitter:
         8: 97e-9
         9: 107e-9
   source:
-    node_file: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/NODE.txt  # If not `none`, read and use an existing node file (specify path to file)
+    node_file: ~/NODE.txt  # If not `none`, read and use an existing node file (specify path to file)
     uc_file: none  # If not `none`, create node file based on a unit cell in a common structure file format (POSCAR, XYZ, etc.)
   basis: BCC
   orientation:
@@ -27,14 +27,14 @@ emitter:
   radius: 50  # Emitter tip radius in Angstroms
   side_height: 25  # Emitter height before hemispherical tip
 evaporation:
-  tapsim_bin:  /home1/NoCsBack/numa/tapashree/pyvaporate/bin/tapsim
-  meshgen_bin: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/meshgen
+  tapsim_bin:  ~/tapsim
+  meshgen_bin: ~/meshgen
   total_events: 2%
   events_per_step: 1%
 lammps:
-  bin: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/lmp_mpi
+  bin: ~/lmp_mpi
   read_file: none
-  potentials_location: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/W_zhou.eam.alloy
+  potentials_location: ~/W_zhou.eam.alloy
   minimize:
     surface_only: true
     etol: 1e-8

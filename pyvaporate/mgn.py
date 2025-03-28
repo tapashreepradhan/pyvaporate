@@ -1,6 +1,5 @@
 mgn_ini_lines = [
-    'LEVEL_LIMIT = 0\n', '\n', 'RESULTS_CHUNK_SIZE = 0\n',
-    'RESULTS_FILENAME = **FILENAME HERE**\n', '\n',
+    'LEVEL_LIMIT = 0\n', '\n', '\n',
     'INPUT_XY_EXPANSION = 1.5\n', 'INPUT_Z_EXPANSION = 1.1\n',
     'INPUT_PLC_CONTOUR_RADIUS = 100\n', 'INPUT_PLC_CONTOUR_PHI = 16\n',
     'INPUT_PLC_CONTOUR_HEIGHT = 100\n', 'INPUT_PLC_RECOVERY_RADIUS = 50\n',

@@ -1,0 +1,125 @@
+TAPSim 1.0b
+
+Copyright (C) 2012 Christian Oberdorfer
+
+This is free software, and you are welcome to redistribute
+it under certain conditions.
+
+For further details on the program type './tapsim --about'.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<tapsim-log-output>
+	<command-line-options>
+		number of threads: 0
+		operation-mode: 2
+		initialization file: none (internal defaults)
+		<evaporation-mode-options>
+			input dump file: ""
+			input configuration: "mesh.cfg"
+			input nodes: "f_mesh.txt"
+			do initial relaxation: 1
+			initial relaxation threshold: 0
+			initial realxation iteration cycle-size: 100
+			initial relaxation deviation queue-size: 25
+			reset-potentials: 0
+			<evap-options>
+results data file: "results_data"
+results data file mode: "0"
+results data chunk size: "10000"
+trajectory data file: "trajectory_data"
+trajectory data file mode: "0"
+trajectory data chunk size: "10000"
+grid data file: "grid_data"
+grid data file mode: "0"
+grid data snapshot interval: "2147483647"
+surface data file: "surface_data"
+surface data file mode: "0"
+surface data snapshot interval: "2147483647"
+geometry data file: "geometry.dat"
+geometry data file mode: "0"
+geometry data contents: "�"
+dump file: "dump"
+dump interval: "10000"
+output delay time: "60"
+method used for computing evaporation probabilities: "0"
+method used for choosing atoms next in evaporation: "0"
+vacuum identifier name: "Vacuum"
+trajectory integrator-type: "1"
+trajectory stepper-type: "1"
+trajectory initial time step: "1e-14"
+trajectory time-step-limit: "1e-16"
+trajectory error threshdol: "1e-06"
+evaporation fixed initial position: "1"
+no initial after desorption: "1"
+initial shrinkage: "0"
+shrink limit: "3.40282e+38"
+initial event count: "0"
+event count limit: "4294967295"
+voltage queue limit: "250"
+local relaxation threshold: "0.01"
+local relaxation shell size: "3"
+local relaxation cycle size: "5"
+local relaxation queue size: "5"
+global relaxation iteration number: "1"
+refresh relaxation interval: "0"
+refresh relaxation threshold: "0"
+refresh relaxation cycle size: "100"
+refresh relaxation queue size: "25"
+			</evap-options>
+		</evaporation-mode-options>
+	</command-line-options>
+	<evaporation-mode>
+		Reading configuration from file "mesh.cfg"
+			-> temperature: 0K
+			-> node-types / id-values:
+				 - Vacuum: #0
+				 - Top: #1
+				 - Bottom: #2
+				 - Sides: #3
+				 - W_0: #10
+			-> total number of types: 5
+		Reading node data from file "f_mesh.txt"
+			-> initializing potentials with preset values from configuration
+			-> node statistics:
+				 - Vacuum: 107746
+				 - Top: 7592
+				 - Bottom: 8191
+				 - Sides: 8708
+				 - W_0: 115189
+			-> total number of nodes: 247426
+			-> maximum (automatic) assigned unique number: 247426
+		Computing delaunay tetrahedralization (elapsed time = 0.15 min)
+			-> number of tetrahedra: 1447746
+			-> geometric extents: (-0.4, -0.4, 0) - (0.4, 0.4, 0.1)
+			-> constrained geometric extents: (-0.4, -0.4, -1.77765e+09) - (0.4, 0.4, 0.1)
+		Syncronizing data structures (elapsed time = 0.633333 min)
+		<relaxation>
+			Error threshold: 0
+			Number of iterations per cycle: 100
+			Deviation queue-size: 25
+			Iteration steps: 6700
+			Elapsed time: 0.25 min
+		</relaxation>
+		<evaporation-sequence>
+			Logging evaporation events in file: "results_data" (ascii mode, chunk-size = 10000)
+			Logging trajectory information in file: "trajectory_data" (ascii mode, chunk-size = 10000)
+			Logging grid data in file: "grid_data" (acii mode)
+			Logging surface information in file: "surface_data" (acii mode)
+			Method used to compute evaporation probabilities: "linear field"
+			Method used to determine next evaporation event: "maximum probability"
+			Parameters used for trajectory computation:
+				-> integrator type = O5_INTEGRATOR
+				-> stepper type = ERROR_RESTRICTED
+				-> initial time step = 1e-14 s
+				-> time step limit = 1e-16 s
+				-> error threshold = 1e-06
+			Initial position of atoms is fixed (= lattice position).
+			Initial velocity of atoms is zero.
+			Temperature value used for calculations: 0 K.
+			Vacuum cells are defined by cell-type named "Vacuum"
+			Initial number of surface sites: 13118
+			Reference value for voltage/time rescaling: 3.7787e+18
+			Initial apex position is at z = 2.48236e-08
+			Writing geometry information to file "geometry.dat"
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Grid_3d::Table::field_o1()

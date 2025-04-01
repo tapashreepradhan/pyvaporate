@@ -7,15 +7,15 @@ emitter:
       fract_occ: 1.0  # Fraction of all sites occupied by that element
       e_fields:  # Evaporation fields for atoms of given coordination numbers
         0: 57e-9
-        1: 27e-9
-        2: 37e-9
-        3: 47e-9
-        4: 57e-9
-        5: 67e-9
-        6: 77e-9
-        7: 87e-9
-        8: 97e-9
-        9: 107e-9
+        # 1: 27e-9
+        # 2: 37e-9
+        # 3: 47e-9
+        # 4: 57e-9
+        # 5: 67e-9
+        # 6: 77e-9
+        # 7: 87e-9
+        # 8: 97e-9
+        # 9: 107e-9
   source:
     node_file: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/NODE.txt  # If not `none`, read and use an existing node file (specify path to file)
     uc_file: none  # If not `none`, create node file based on a unit cell in a common structure file format (POSCAR, XYZ, etc.)
@@ -27,8 +27,8 @@ emitter:
   radius: 50  # Emitter tip radius in Angstroms
   side_height: 25  # Emitter height before hemispherical tip
 evaporation:
-  tapsim_bin:  /home1/NoCsBack/numa/tapashree/pyvaporate/bin/tapsim
-  meshgen_bin: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/meshgen
+  tapsim_bin: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/tapsim_old
+  meshgen_bin: /home1/NoCsBack/numa/tapashree/pyvaporate/bin/meshgen_old
   total_events: 2%
   events_per_step: 1%
 lammps:
@@ -41,3 +41,4 @@ lammps:
     ftol: 1e-8
     maxiter: 10
     maxeval: 10
+    temperature: 50

@@ -105,11 +105,11 @@ def yaml_run(config_file):
     lines = open("emitter.txt").readlines()
     with open("updated_mesh.txt", "w") as f:
         f.write(lines[0])
-        for l in lines[1:-1]:
+        for l in lines[1:]:
             split_line = l.split()
             split_line.append("0\n")
             f.write(" ".join(split_line))
-        f.write(lines[-1])
+        f.write("# 10=W")
     with redirected(stdout="../pyvaporate.log"):
         print("Running LAMMPS")
         call_lammps(n_atoms, SETUP)

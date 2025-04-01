@@ -1,0 +1,21 @@
+Running Meshgen
+Running LAMMPS
+0 atoms lost from surface
+
+STEP 1
+------
+Running TAPSim
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Grid_3d::Table::field_o1()
+Traceback (most recent call last):
+  File "/export/home2/NoCsBack/numa/tapashree/pyvaporate/execute.py", line 2, in <module>
+    yaml_run("/home1/NoCsBack/numa/tapashree/pyvaporate/setup.yaml")
+  File "/export/home2/NoCsBack/numa/tapashree/pyvaporate/pyvaporate/run.py", line 130, in yaml_run
+    call_tapsim(SETUP)
+  File "/export/home2/NoCsBack/numa/tapashree/pyvaporate/pyvaporate/call.py", line 34, in call_tapsim
+    _ = subprocess.check_output(
+  File "/usr/lib/python3.10/subprocess.py", line 421, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/home1/NoCsBack/numa/tapashree/pyvaporate/bin/tapsim_old', 'evaporation', 'mesh.cfg', 'mesh.txt', '--event-limit=1152', '--write-ascii']' died with <Signals.SIGABRT: 6>.

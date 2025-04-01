@@ -219,7 +219,7 @@ def convert_lammps_to_emitter(n_nodes):
             if atom_type[-1] == "0":
                 n_lost += 1
             else:
-                e.write("{}\n".format("	".join([x, y, z, atom_type, "0"])))
+                e.write("{}\n".format("	".join([x, y, z, "10", "0"])))
             i += 1
     print("{} atoms lost from surface".format(n_lost))
 
@@ -267,8 +267,8 @@ def write_lammps_input_file(setup):
     with open("in.emitter_relax", "w") as er:
         er.write("# Emitter Relaxation\n\n")
         er.write("units real\natom_style atomic\n\nread_data data.emitter\n\n")
-        er.write("pair_style meam/c\n")
-        er.write("pair_coeff * * %s %s NULL %s\n\n" % (pot, elts, elts))
+        er.write("pair_style eam/alloy\n")
+        er.write("pair_coeff * * %s %s\n\n" % (pot, elts))
         er.write("neighbor 1.0 bin\n")
         if setup["lammps"]["minimize"]["surface_only"] == True:
             er.write("group inner id {}\n".format(" ".join([i for i in fixed_indices])))

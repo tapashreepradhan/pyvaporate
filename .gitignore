@@ -1,0 +1,7 @@
+.DS_Store
+bin/meshgen
+bin/tapsim
+bin/lmp_mpi
+# Ignore all compiled Python files and cache folders
+*.pyc
+__pycache__/

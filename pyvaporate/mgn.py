@@ -32,7 +32,7 @@ mgn_ini_lines = [
 ]
 
 mesh_cfg_lines = [
-    'ASCII\n', '\n', 'TEMPERATURE = 0.00000e+00\n', '\n',
+    'ASCII\n', '\n', 'TEMPERATURE = 50.0e+00\n', '\n',
     'ID = 0\n', 'NAME = Vacuum\n', 'CHARGE_DENSITY = 0.00000e+00\n',
     'DIELECTRICITY = 1.00000e+00\n', 'REMOVABLE = 0\n',
     'NEUMANN_BOUNDARY = 0\n', 'DIRICHLET_BOUNDARY = 0\n',

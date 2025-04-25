@@ -5,3 +5,8 @@ bin/lmp_mpi
 # Ignore all compiled Python files and cache folders
 *.pyc
 __pycache__/
+# Ignore dump files at any level
+dump
+dump.*
+*/dump
+*/dump.*

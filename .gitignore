@@ -6,6 +6,8 @@ bin/lmp_mpi
 *.pyc
 __pycache__/
 # Ignore dump files at any level
+trajectory_data.*
+*.dat
 dump
 dump.*
 */dump
